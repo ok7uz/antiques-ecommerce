@@ -1,3 +1,5 @@
+from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -5,8 +7,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from apps.product.models import Product, Category
-from apps.product.serializers import ProductRetrieveSerializer, ProductListSerializer, CategoryRetrieveSerializer, \
-    CategoryListSerializer
+from apps.product.serializers import ProductListSerializer, CategoryRetrieveSerializer, \
+    CategoryListSerializer, ProductSerializer
+
+
+class Pagination(PageNumberPagination):
+    page_size = 1
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 
 class ProductRetrieveView(APIView):
@@ -15,12 +23,12 @@ class ProductRetrieveView(APIView):
     @swagger_auto_schema(
         operation_description="Retrieve a product",
         tags=['Product'],
-        responses={200: ProductRetrieveSerializer()}
+        responses={200: ProductSerializer()}
     )
     def get(self, request, id):
         try:
             product = Product.objects.get(id=id)
-            serializer = ProductRetrieveSerializer(product)
+            serializer = ProductSerializer(product)
             data = serializer.data
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
@@ -29,20 +37,12 @@ class ProductRetrieveView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ProductListView(APIView):
+class ProductListView(ListAPIView):
+    # swagger_schema = {'tags': ['Product']}
     permission_classes = [AllowAny]
-
-    @swagger_auto_schema(
-        operation_description="Retrieve a product",
-        tags=['Product'],
-        responses={200: ProductListSerializer()}
-    )
-    def get(self, request):
-        products = Product.objects.all()
-        serializer = ProductListSerializer(products)
-        print(serializer.data)
-        data = serializer.data
-        return Response(data['products'], status=status.HTTP_200_OK)
+    pagination_class = Pagination
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
 class CategoryRetrieveView(APIView):
@@ -67,6 +67,7 @@ class CategoryRetrieveView(APIView):
 
 class CategoryListView(APIView):
     permission_classes = [AllowAny]
+    pagination_class = Pagination
 
     @swagger_auto_schema(
         operation_description="Categories",

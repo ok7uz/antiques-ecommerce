@@ -38,6 +38,7 @@ class Product(models.Model):
     characteristic = models.CharField(max_length=150)
     size = models.TextField()
     description = models.TextField()
+    images = models.ManyToOneRel(to='ProductImage', field='image', field_name='images', related_name='product', on_delete=models.CASCADE)
 
     objects = models.Manager()
 

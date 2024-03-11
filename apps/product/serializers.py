@@ -21,7 +21,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductRetrieveSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField(read_only=True)
     category = serializers.SerializerMethodField(read_only=True)
 
@@ -40,15 +40,17 @@ class ProductRetrieveSerializer(serializers.ModelSerializer):
         return ProductImageSerializer(images, many=True).data
 
 
-class ProductListSerializer(serializers.Serializer):
-    products = serializers.SerializerMethodField(read_only=True)
+class ProductListSerializer(serializers.ModelSerializer):
+    # images = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
+        model = Product
         fields = '__all__'
 
     @staticmethod
-    def get_products(obj):
-        return ProductRetrieveSerializer(obj, many=True).data
+    def get_images(obj):
+        images = obj.product_images.all()
+        return ProductImageSerializer(images, many=True).data
 
 
 class CategoryRetrieveSerializer(serializers.ModelSerializer):
