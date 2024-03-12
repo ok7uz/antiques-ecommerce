@@ -43,8 +43,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_subcategories(obj):
-        products = obj.subcategories.all()
-        return SubcategorySerializer(products, many=True).data
+        subcategories = obj.subcategories
+        return SubcategorySerializer(subcategories, many=True).data
 
 
 class SubcategorySerializer(serializers.ModelSerializer):
@@ -57,7 +57,7 @@ class SubcategorySerializer(serializers.ModelSerializer):
     @staticmethod
     def get_products(obj):
         products = obj.products.all()
-        return ProductSerializer(products, many=True).data
+        return ProductListSerializer(products, many=True).data
 
 
 class ProductSubcategorySerializer(SubcategorySerializer):

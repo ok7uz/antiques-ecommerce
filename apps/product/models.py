@@ -1,10 +1,8 @@
 import uuid
-
 from django.db import models
 
 
 def upload_to(instance, filename):
-    print(instance)
     return 'images/{instance}/{filename}'.format(instance=instance.product.id, filename=filename)
 
 
