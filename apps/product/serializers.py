@@ -40,20 +40,13 @@ class ProductSerializer(serializers.ModelSerializer):
         return ProductImageSerializer(images, many=True).data
 
 
-class ProductListSerializer(serializers.ModelSerializer):
-    # images = serializers.SerializerMethodField(read_only=True)
-
+class ProductListSerializer(ProductSerializer):
     class Meta:
-        model = Product
-        fields = '__all__'
-
-    @staticmethod
-    def get_images(obj):
-        images = obj.product_images.all()
-        return ProductImageSerializer(images, many=True).data
+        model = ProductSerializer.Meta.model
+        fields = ['id', 'name', 'price', 'images']
 
 
-class CategoryRetrieveSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     products = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -63,15 +56,4 @@ class CategoryRetrieveSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_products(obj):
         products = obj.products.all()
-        return ProductRetrieveSerializer(products, many=True).data
-
-
-class CategoryListSerializer(serializers.Serializer):
-    categories = serializers.SerializerMethodField(read_only=True)
-
-    class Meta:
-        fields = '__all__'
-
-    @staticmethod
-    def get_categories(obj):
-        return CategoryRetrieveSerializer(obj, many=True).data
+        return ProductSerializer(products, many=True).data
