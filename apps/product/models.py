@@ -23,10 +23,26 @@ class Category(models.Model):
         return self.name
 
 
+class Subcategory(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories')
+
+    objects = models.Manager()
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'subcategory'
+        verbose_name_plural = 'subcategories'
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150, unique=True, null=False, blank=False)
-    category = models.ManyToManyField(Category, related_name='products')
+    subcategory = models.ManyToManyField(Subcategory, related_name='products')
     price = models.PositiveIntegerField()
     discount = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)
@@ -38,7 +54,6 @@ class Product(models.Model):
     characteristic = models.CharField(max_length=150)
     size = models.TextField()
     description = models.TextField()
-    images = models.ManyToOneRel(to='ProductImage', field='image', field_name='images', related_name='product', on_delete=models.CASCADE)
 
     objects = models.Manager()
 

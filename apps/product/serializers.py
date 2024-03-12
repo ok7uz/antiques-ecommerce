@@ -4,40 +4,28 @@ from apps.product.models import Product, ProductImage, Category
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    url = serializers.SerializerMethodField()
-
     class Meta:
         model = ProductImage
-        fields = ['url']
-
-    @staticmethod
-    def get_url(obj):
-        return obj.image.url
-
-
-class ProductCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
+        fields = ['image']
 
 
 class ProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField(read_only=True)
-    category = serializers.SerializerMethodField(read_only=True)
+    subcategory = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Product
         fields = '__all__'
 
-    @staticmethod
-    def get_category(obj):
-        categories = obj.category.all()
-        return ProductCategorySerializer(categories, many=True).data
+    def get_subcategory(self, obj):
+        subcategories = obj.subcategory.all().values()
+        return ProductSubcategorySerializer(subcategories, many=True).data
 
-    @staticmethod
-    def get_images(obj):
+    def get_images(self, obj):
         images = obj.product_images.all()
-        return ProductImageSerializer(images, many=True).data
+        return [
+            product_image.image.url for product_image in images
+        ]
 
 
 class ProductListSerializer(ProductSerializer):
@@ -47,6 +35,19 @@ class ProductListSerializer(ProductSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    subcategories = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'subcategories']
+
+    @staticmethod
+    def get_subcategories(obj):
+        products = obj.subcategories.all()
+        return SubcategorySerializer(products, many=True).data
+
+
+class SubcategorySerializer(serializers.ModelSerializer):
     products = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -57,3 +58,9 @@ class CategorySerializer(serializers.ModelSerializer):
     def get_products(obj):
         products = obj.products.all()
         return ProductSerializer(products, many=True).data
+
+
+class ProductSubcategorySerializer(SubcategorySerializer):
+    class Meta:
+        model = ProductSerializer.Meta.model
+        fields = ['id', 'name']

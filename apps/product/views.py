@@ -1,4 +1,3 @@
-from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -7,8 +6,8 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from rest_framework.views import APIView
 
-from apps.product.models import Product, Category
-from apps.product.serializers import ProductListSerializer, ProductSerializer, CategorySerializer
+from apps.product.models import Product, Category, Subcategory
+from apps.product.serializers import ProductListSerializer, ProductSerializer, CategorySerializer, SubcategorySerializer
 
 
 class Pagination(PageNumberPagination):
@@ -91,3 +90,20 @@ class CategoryListView(APIView):
         result_page = paginator.paginate_queryset(queryset, request)
         serializer = CategorySerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+
+class SubcategoryView(APIView):
+    permission_classes = (AllowAny, )
+
+    @swagger_auto_schema(
+        responses={200: SubcategorySerializer(many=True)},
+        tags=['Product'],
+    )
+    def get(self, request, id):
+        try:
+            instance = Subcategory.objects.get(id=id)
+        except Subcategory.DoesNotExist:
+            return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = SubcategorySerializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from apps.product.models import Product, ProductImage, Category
+from apps.product.models import Product, ProductImage, Category, Subcategory
 
 
 class ProductImagesInline(admin.TabularInline):
@@ -24,6 +24,16 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImagesInline]
 
 
+class SubcategoryInline(admin.TabularInline):
+    model = Subcategory
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    inlines = [SubcategoryInline]
+
+
+@admin.register(Subcategory)
+class SubcategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
