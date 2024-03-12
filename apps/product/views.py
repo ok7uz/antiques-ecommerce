@@ -1,11 +1,13 @@
 from django.db.models import Q
+
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-from drf_yasg import openapi
 from rest_framework.views import APIView
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 from apps.product.models import Product, Category, Subcategory
 from apps.product.serializers import ProductListSerializer, ProductSerializer, CategorySerializer, SubcategorySerializer
@@ -71,9 +73,9 @@ class CategoryView(APIView):
         responses={200: CategorySerializer(many=True)},
         tags=['Product'],
     )
-    def get(self, request, category_id):
+    def get(self, request, id):
         try:
-            instance = Category.objects.get(id=category_id)
+            instance = Category.objects.get(id=id)
         except Category.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 

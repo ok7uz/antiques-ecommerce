@@ -23,9 +23,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_images(self, obj):
         images = obj.product_images.all()
-        return [
-            product_image.image.url for product_image in images
-        ]
+        return [product_image.image.url for product_image in images]
 
 
 class ProductListSerializer(ProductSerializer):

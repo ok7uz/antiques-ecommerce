@@ -11,9 +11,9 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        fields = ['cart', 'product', 'quantity']
+        fields = ['product', 'quantity']
         extra_kwargs = {'quantity': {'required': True}}
-        required_fields = ['cart', 'product', 'quantity']
+        required_fields = ['product', 'quantity']
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -24,11 +24,17 @@ class CartSerializer(serializers.ModelSerializer):
         cart = Cart(amount=validated_data.pop('amount'))
         cart.save()
 
+        if not items:
+            raise serializers.ValidationError({
+                'items': ['This field is required and cannot be empty.']
+            })
+
         for item in items:
-            item['cart'] = cart.id
             item['product'] = item.pop('product_id', None)
-            serializer = CartItemSerializer(data=item,)
+
+            serializer = CartItemSerializer(data=item)
             if serializer.is_valid():
+                serializer.validated_data['cart_id'] = cart.id
                 serializer.save()
             else:
                 cart.delete()
@@ -38,8 +44,7 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ['id', 'items', 'amount']
 
-    @staticmethod
-    def get_items(obj):
+    def get_items(self, obj):
         return CartItemSerializer(obj.items.all(), many=True).data
