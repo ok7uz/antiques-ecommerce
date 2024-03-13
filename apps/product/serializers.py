@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 
 from apps.product.models import Product, ProductImage, Category, Subcategory
@@ -29,9 +30,15 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(ProductSerializer):
+    url = serializers.SerializerMethodField(read_only=True)
+    images = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = ProductSerializer.Meta.model
-        fields = ['id', 'name', 'price', 'images']
+        fields = ['id', 'name', 'url', 'price', 'images']
+
+    def get_url(self, obj):
+        return reverse('product-detail', args=[obj.id])
 
 
 class CategorySerializer(serializers.ModelSerializer):

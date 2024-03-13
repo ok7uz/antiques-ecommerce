@@ -32,7 +32,7 @@ class ProductView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = ProductSerializer(instance)
+        serializer = ProductSerializer(instance, context={'request': self.request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -60,7 +60,7 @@ class ProductListView(APIView):
 
         paginator = Pagination()
         result_page = paginator.paginate_queryset(queryset, request)
-        serializer = ProductListSerializer(result_page, many=True)
+        serializer = ProductListSerializer(result_page, context={'request': request}, many=True)
         response = paginator.get_paginated_response(serializer.data)
 
         return Response(response.data, status=response.status_code)
