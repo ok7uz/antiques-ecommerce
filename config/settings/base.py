@@ -106,9 +106,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = 'static'
 
 # Media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
@@ -126,7 +128,7 @@ REST_FRAMEWORK = {
 }
 
 # CKEditor Settings
-CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_UPLOAD_PATH = 'news/'
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
 CKEDITOR_CONFIGS = {
@@ -134,6 +136,7 @@ CKEDITOR_CONFIGS = {
         {
             'toolbar': 'full',
             'width': 'auto',
+            "versionCheck": False,
             'extraPlugins': ','.join([
                 'codesnippet',
             ]),

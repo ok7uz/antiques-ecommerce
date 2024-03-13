@@ -5,7 +5,7 @@ from apps.product.managers import MainCategoryManager, SubCategoryManager
 
 
 def upload_to(instance, filename):
-    return 'images/{instance}/{filename}'.format(instance=instance.product.id, filename=filename)
+    return 'products/{filename}'.format(instance=instance.product.id, filename=filename)
 
 
 class Category(models.Model):
