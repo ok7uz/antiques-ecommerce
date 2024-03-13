@@ -9,8 +9,10 @@ from rest_framework.views import APIView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from apps.product.models import Product, Category, Subcategory
-from apps.product.serializers import ProductListSerializer, ProductSerializer, CategorySerializer, SubcategorySerializer
+from apps.product.models import Product, Category,  MainCategory, SubCategory
+from apps.product.serializers import (
+    ProductListSerializer, ProductSerializer, MainCategorySerializer, SubCategorySerializer
+)
 
 
 class Pagination(PageNumberPagination):
@@ -69,7 +71,7 @@ class CategoryView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
-        responses={200: CategorySerializer(many=True)},
+        responses={200: MainCategorySerializer(many=True)},
         tags=['Product'],
     )
     def get(self, request, id):
@@ -78,7 +80,7 @@ class CategoryView(APIView):
         except Category.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = CategorySerializer(instance)
+        serializer = MainCategorySerializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -86,28 +88,28 @@ class CategoryListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        queryset = Category.objects.all()
+        queryset = MainCategory.objects.all()
 
         search_term = request.GET.get('search')
         if search_term:
             queryset = queryset.filter(name__icontains=search_term)
 
-        serializer = CategorySerializer(queryset, many=True)
+        serializer = MainCategorySerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class SubcategoryView(APIView):
+class SubCategoryView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
-        responses={200: SubcategorySerializer(many=True)},
+        responses={200: SubCategorySerializer(many=True)},
         tags=['Product'],
     )
     def get(self, request, id):
         try:
-            instance = Subcategory.objects.get(id=id)
-        except Subcategory.DoesNotExist:
+            instance = SubCategory.objects.get(id=id)
+        except SubCategory.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = SubcategorySerializer(instance)
+        serializer = SubCategorySerializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)

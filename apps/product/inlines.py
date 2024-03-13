@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from apps.product.models import Product, ProductImage, Subcategory
+from apps.product.models import Product, ProductImage, Category
 
 
 class ImagesInline(admin.TabularInline):
@@ -39,5 +39,7 @@ class ProductInline(admin.TabularInline):
     link_to_product.short_description = 'name'
 
 
-class SubcategoryInline(admin.TabularInline):
-    model = Subcategory
+class CategoryInline(admin.TabularInline):
+    verbose_name = 'sub category'
+    verbose_name_plural = 'sub categories'
+    model = Category

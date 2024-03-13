@@ -1,6 +1,8 @@
 import uuid
 from django.db import models
 
+from apps.product.managers import MainCategoryManager, SubCategoryManager
+
 
 def upload_to(instance, filename):
     return 'images/{instance}/{filename}'.format(instance=instance.product.id, filename=filename)
@@ -9,6 +11,7 @@ def upload_to(instance, filename):
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', null=True, blank=True)
 
     objects = models.Manager()
 
@@ -21,26 +24,24 @@ class Category(models.Model):
         return self.name
 
 
-class Subcategory(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories')
-
-    objects = models.Manager()
+class MainCategory(Category):
+    objects = MainCategoryManager()
 
     class Meta:
-        ordering = ['name']
-        verbose_name = 'subcategory'
-        verbose_name_plural = 'subcategories'
+        proxy = True
 
-    def __str__(self):
-        return self.name
+
+class SubCategory(Category):
+    objects = SubCategoryManager()
+
+    class Meta:
+        proxy = True
 
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150, unique=True, null=False, blank=False)
-    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name='products')
     price = models.PositiveIntegerField()
     discount = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)
