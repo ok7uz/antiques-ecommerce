@@ -7,7 +7,7 @@ from apps.product.models import Product, ProductImage, Category
 
 class ImagesInline(admin.TabularInline):
     model = ProductImage
-    readonly_fields = ('image_preview',)
+    readonly_fields = ['image_preview']
 
     def image_preview(self, obj):
         if obj.image:

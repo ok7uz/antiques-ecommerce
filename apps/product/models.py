@@ -76,4 +76,4 @@ class ProductImage(models.Model):
         verbose_name_plural = 'product images'
 
     def __str__(self):
-        return self.image
+        return self.image.url
