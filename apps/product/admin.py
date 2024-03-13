@@ -1,31 +1,22 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
+from django.forms import Textarea
+from django.db import models
 
-from apps.product.models import Product, ProductImage, Category, Subcategory
-
-
-class ProductImagesInline(admin.TabularInline):
-    model = ProductImage
-    readonly_fields = ('image_preview',)
-
-    def image_preview(self, obj):
-        print(obj.image)
-        if obj.image:
-            return mark_safe(f'<img src="{obj.image.url}" height="80px">')
-        return 'No image'
-
-    image_preview.short_description = 'IMAGE'
+from apps.product.inlines import ImagesInline, SubcategoryInline, ProductInline
+from apps.product.models import Product, Category, Subcategory
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'quantity')
     readonly_fields = []
-    inlines = [ProductImagesInline]
+    search_fields = ('name', 'description')
+    list_filter = ('subcategory', )
+    inlines = [ImagesInline]
 
-
-class SubcategoryInline(admin.TabularInline):
-    model = Subcategory
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': '100%'})},
+    }
 
 
 @admin.register(Category)
@@ -36,4 +27,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Subcategory)
 class SubcategoryAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ('name', )
+    list_filter = ('category',)
+    inlines = [ProductInline]

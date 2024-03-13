@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.product.models import Product, ProductImage, Category
+from apps.product.models import Product, ProductImage, Category, Subcategory
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -17,13 +17,15 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-    def get_subcategory(self, obj):
-        subcategories = obj.subcategory.all().values()
-        return ProductSubcategorySerializer(subcategories, many=True).data
-
     def get_images(self, obj):
-        images = obj.product_images.all()
+        images = obj.images.all()
         return [product_image.image.url for product_image in images]
+
+    def get_subcategory(self, obj):
+        return {
+            'id': obj.subcategory.id,
+            'name': obj.subcategory.name,
+        }
 
 
 class ProductListSerializer(ProductSerializer):
@@ -39,8 +41,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'subcategories']
 
-    @staticmethod
-    def get_subcategories(obj):
+    def get_subcategories(self, obj):
         subcategories = obj.subcategories
         return SubcategorySerializer(subcategories, many=True).data
 
@@ -49,16 +50,9 @@ class SubcategorySerializer(serializers.ModelSerializer):
     products = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = Product
+        model = Subcategory
         fields = ['id', 'name', 'products']
 
-    @staticmethod
-    def get_products(obj):
+    def get_products(self, obj):
         products = obj.products.all()
         return ProductListSerializer(products, many=True).data
-
-
-class ProductSubcategorySerializer(SubcategorySerializer):
-    class Meta:
-        model = ProductSerializer.Meta.model
-        fields = ['id', 'name']

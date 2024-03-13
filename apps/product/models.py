@@ -40,7 +40,7 @@ class Subcategory(models.Model):
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150, unique=True, null=False, blank=False)
-    subcategory = models.ManyToManyField(Subcategory, related_name='products')
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name='products')
     price = models.PositiveIntegerField()
     discount = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)
@@ -65,7 +65,7 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='product_images')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='images')
     image = models.ImageField(upload_to=upload_to, null=True, blank=True, default=None)
 
     objects = models.Manager()
