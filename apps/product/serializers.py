@@ -20,7 +20,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_images(self, obj):
         images = obj.images.all()
-        return [product_image.image.url for product_image in images]
+        return list([product_image.image.url for product_image in images])
 
     def get_subcategory(self, obj):
         return {

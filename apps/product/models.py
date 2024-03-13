@@ -13,7 +13,7 @@ class Category(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', )
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
@@ -29,7 +29,7 @@ class Subcategory(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', )
         verbose_name = 'subcategory'
         verbose_name_plural = 'subcategories'
 
@@ -56,7 +56,7 @@ class Product(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('-created', 'name')
         verbose_name = 'product'
         verbose_name_plural = 'products'
 
@@ -70,5 +70,9 @@ class ProductImage(models.Model):
 
     objects = models.Manager()
 
+    class Meta:
+        verbose_name = 'product image'
+        verbose_name_plural = 'product images'
+
     def __str__(self):
-        return self.product.name
+        return self.image

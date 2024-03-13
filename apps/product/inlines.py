@@ -14,7 +14,7 @@ class ImagesInline(admin.TabularInline):
             return mark_safe(f'<a href="{obj.image.url}" target="_blank"><img src="{obj.image.url}" height="50px"></a>')
         return 'No image'
 
-    image_preview.short_description = 'IMAGE'
+    image_preview.short_description = 'image'
 
 
 class ProductInline(admin.TabularInline):
@@ -25,10 +25,8 @@ class ProductInline(admin.TabularInline):
     extra = 0
 
     def link_to_product(self, obj):
-        return mark_safe('<a href="{}">{}</a>'.format(
-            reverse('admin:product_product_change', args=[obj.id]),
-            obj.name
-        ))
+        link = reverse('admin:product_product_change', args=[obj.id])
+        return mark_safe('<a href="{}">{}</a>'.format(link, obj.name))
 
     def image_preview(self, obj):
         product_image = obj.images.first()

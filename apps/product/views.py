@@ -20,7 +20,7 @@ class Pagination(PageNumberPagination):
 
 
 class ProductView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         responses={200: ProductSerializer()},
@@ -37,22 +37,21 @@ class ProductView(APIView):
 
 
 class ProductListView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         responses={200: ProductListSerializer(many=True)},
         tags=['Product'],
         manual_parameters=[
             openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('page_size', openapi.IN_QUERY, description="Number of items per page",
-                              type=openapi.TYPE_INTEGER),
+            openapi.Parameter('page_size', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER),
             openapi.Parameter('search', openapi.IN_QUERY, description="Search", type=openapi.TYPE_STRING),
         ]
     )
     def get(self, request):
         queryset = Product.objects.all()
-
         search_term = request.GET.get('search')
+
         if search_term:
             queryset = queryset.filter(
                 Q(name__icontains=search_term) | Q(description__icontains=search_term)
@@ -67,7 +66,7 @@ class ProductListView(APIView):
 
 
 class CategoryView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         responses={200: CategorySerializer(many=True)},
@@ -84,7 +83,7 @@ class CategoryView(APIView):
 
 
 class CategoryListView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = [AllowAny]
 
     def get(self, request):
         queryset = Category.objects.all()
@@ -98,7 +97,7 @@ class CategoryListView(APIView):
 
 
 class SubcategoryView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         responses={200: SubcategorySerializer(many=True)},

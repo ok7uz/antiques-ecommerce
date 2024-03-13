@@ -12,7 +12,7 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = []
     search_fields = ('name', 'description')
     list_filter = ('subcategory', )
-    inlines = [ImagesInline]
+    inlines = (ImagesInline, )
 
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': '100%'})},
@@ -21,12 +21,12 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    inlines = [SubcategoryInline]
+    list_display = ('name', )
+    inlines = (SubcategoryInline, )
 
 
 @admin.register(Subcategory)
 class SubcategoryAdmin(admin.ModelAdmin):
     list_display = ('name', )
-    list_filter = ('category',)
-    inlines = [ProductInline]
+    list_filter = ('category', )
+    inlines = (ProductInline, )
