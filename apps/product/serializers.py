@@ -1,27 +1,37 @@
 from django.urls import reverse
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
 
 from apps.product.models import Product, ProductImage, Category, MainCategory, SubCategory
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-    products = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'products']
-
-    def get_products(self, obj):
-        products = obj.products.all()
-        return ProductListSerializer(products, many=True).data
+        fields = ['id', 'name']
 
 
 class MainCategorySerializer(serializers.ModelSerializer):
-    children = SubCategorySerializer(many=True, read_only=True)
+    products = serializers.SerializerMethodField()
+    sub_categories = SubCategorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'image', 'children']
+        fields = ['id', 'name', 'image', 'products', 'sub_categories']
+
+    def get_products(self, obj):
+        get_data = self.context['request'].query_params
+        subcategory = get_data.get('subcategory', None)
+        products = Product.objects.filter(category__parent=obj)
+
+        if subcategory:
+            try:
+                products = products.filter(category_id=subcategory)
+            except ValidationError:
+                products = []
+
+        return ProductListSerializer(products, many=True).data
 
 
 class ProductSerializer(serializers.ModelSerializer):

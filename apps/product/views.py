@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.http import JsonResponse
 
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -9,9 +10,9 @@ from rest_framework.views import APIView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from apps.product.models import Product, Category,  MainCategory, SubCategory
+from apps.product.models import Product, Category,  MainCategory
 from apps.product.serializers import (
-    ProductListSerializer, ProductSerializer, MainCategorySerializer, SubCategorySerializer
+    ProductListSerializer, ProductSerializer, MainCategorySerializer
 )
 
 
@@ -38,33 +39,18 @@ class ProductView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ProductListView(APIView):
+class NewProductsView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         responses={200: ProductListSerializer(many=True)},
         tags=['Product'],
-        manual_parameters=[
-            openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('page_size', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('search', openapi.IN_QUERY, description="Search", type=openapi.TYPE_STRING),
-        ]
     )
     def get(self, request):
-        queryset = Product.objects.all()
-        search_term = request.GET.get('search')
+        queryset = Product.objects.all().order_by('-created')[:4]
+        serializer = ProductListSerializer(queryset, context={'request': request}, many=True)
 
-        if search_term:
-            queryset = queryset.filter(
-                Q(name__icontains=search_term) | Q(description__icontains=search_term)
-            )
-
-        paginator = Pagination()
-        result_page = paginator.paginate_queryset(queryset, request)
-        serializer = ProductListSerializer(result_page, context={'request': request}, many=True)
-        response = paginator.get_paginated_response(serializer.data)
-
-        return Response(response.data, status=response.status_code)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CategoryView(APIView):
@@ -78,9 +64,9 @@ class CategoryView(APIView):
         try:
             instance = Category.objects.get(id=id)
         except Category.DoesNotExist:
-            return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Category with id {} does not exist.'.format(id)}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = MainCategorySerializer(instance)
+        serializer = MainCategorySerializer(instance, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -89,27 +75,12 @@ class CategoryListView(APIView):
 
     def get(self, request):
         queryset = MainCategory.objects.all()
-
-        search_term = request.GET.get('search')
-        if search_term:
-            queryset = queryset.filter(name__icontains=search_term)
-
-        serializer = MainCategorySerializer(queryset, many=True)
+        serializer = MainCategorySerializer(queryset, context={'request': request}, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class SubCategoryView(APIView):
-    permission_classes = [AllowAny]
-
-    @swagger_auto_schema(
-        responses={200: SubCategorySerializer(many=True)},
-        tags=['Product'],
-    )
-    def get(self, request, id):
-        try:
-            instance = SubCategory.objects.get(id=id)
-        except SubCategory.DoesNotExist:
-            return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = SubCategorySerializer(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+def custom404(request, exception=None):
+    return JsonResponse({
+        'status_code': 404,
+        'error': 'The resource was not found'
+    })
