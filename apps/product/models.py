@@ -12,6 +12,7 @@ class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', null=True, blank=True)
+    image = models.ImageField(upload_to='category/', null=True)
 
     objects = models.Manager()
 
@@ -29,6 +30,8 @@ class MainCategory(Category):
 
     class Meta:
         proxy = True
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
 
 
 class SubCategory(Category):
@@ -36,6 +39,8 @@ class SubCategory(Category):
 
     class Meta:
         proxy = True
+        verbose_name = 'Sub Category'
+        verbose_name_plural = 'Sub Categories'
 
 
 class Product(models.Model):
@@ -47,12 +52,12 @@ class Product(models.Model):
     is_available = models.BooleanField(default=True)
     quantity = models.PositiveIntegerField()
     created = models.DateTimeField(auto_now_add=True)
-
     art = models.CharField(max_length=150)
     history = models.CharField(max_length=150)
     characteristic = models.CharField(max_length=150)
     size = models.TextField()
     description = models.TextField()
+    video_url = models.URLField(blank=True, null=True)
 
     objects = models.Manager()
 

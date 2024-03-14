@@ -43,3 +43,4 @@ class CategoryInline(admin.TabularInline):
     verbose_name = 'sub category'
     verbose_name_plural = 'sub categories'
     model = Category
+    fields = ['name']
