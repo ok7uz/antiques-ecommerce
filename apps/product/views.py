@@ -73,6 +73,10 @@ class CategoryView(APIView):
 class CategoryListView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        responses={200: MainCategorySerializer(many=True)},
+        tags=['Product'],
+    )
     def get(self, request):
         queryset = MainCategory.objects.all()
         serializer = MainCategorySerializer(queryset, context={'request': request}, many=True)
