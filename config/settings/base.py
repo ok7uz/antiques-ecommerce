@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     # apps
     'apps.product',
     'apps.cart',
-    'apps.news'
+    'apps.main_page'
 ]
 
 MIDDLEWARE = [
@@ -95,7 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # (can be left in base.py)
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 

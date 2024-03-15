@@ -30,7 +30,7 @@ urlpatterns = [
 
     path('product/', include('apps.product.urls')),
     path('cart/', include('apps.cart.urls')),
-    path('news/', include('apps.news.urls')),
+    path('', include('apps.main_page.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

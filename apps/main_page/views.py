@@ -1,14 +1,11 @@
-from django.db.models import Q
-from django.shortcuts import render
-from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.news.models import News
-from apps.news.serializers import NewsListSerializer, NewsSerializer
+from apps.main_page.models import News, Banner, Video
+from apps.main_page.serializers import NewsListSerializer, NewsSerializer, BannerSerializer, VideoSerializer
 
 
 class NewsView(APIView):
@@ -16,7 +13,7 @@ class NewsView(APIView):
 
     @swagger_auto_schema(
         responses={200: NewsSerializer()},
-        tags=['News'],
+        tags=['Home Page'],
     )
     def get(self, request, id):
         try:
@@ -33,9 +30,35 @@ class NewsListView(APIView):
 
     @swagger_auto_schema(
         responses={200: NewsListSerializer(many=True)},
-        tags=['News'],
+        tags=['Home Page'],
     )
     def get(self, request):
         queryset = News.objects.all()
         serializer = NewsListSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class BannerListView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: BannerSerializer(many=True)},
+        tags=['Home Page'],
+    )
+    def get(self, request):
+        queryset = Banner.objects.all()
+        serializer = BannerSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class VideoSerializerListView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: VideoSerializer(many=True)},
+        tags=['Home Page'],
+    )
+    def get(self, request):
+        queryset = Video.objects.all()
+        serializer = VideoSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

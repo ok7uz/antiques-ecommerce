@@ -6,32 +6,31 @@ from apps.product.models import Product, ProductImage, Category, MainCategory, S
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
         fields = ['id', 'name']
 
 
-class MainCategorySerializer(serializers.ModelSerializer):
-    products = serializers.SerializerMethodField()
-    sub_categories = SubCategorySerializer(many=True, read_only=True)
+class CategorySerializer(serializers.ModelSerializer):
+    sub_categories = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'image', 'products', 'sub_categories']
+        fields = ['id', 'name', 'sub_categories']
 
-    def get_products(self, obj):
-        get_data = self.context['request'].query_params
-        subcategory = get_data.get('subcategory', None)
-        products = Product.objects.filter(category__parent=obj)
+    def get_sub_categories(self, obj):
+        return SubCategorySerializer(obj.sub_categories, many=True).data
 
-        if subcategory:
-            try:
-                products = products.filter(category_id=subcategory)
-            except ValidationError:
-                products = []
 
-        return ProductListSerializer(products, many=True).data
+class MainCategorySerializer(serializers.ModelSerializer):
+    categories = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MainCategory
+        fields = ['id', 'name', 'image', 'categories']
+
+    def get_categories(self, obj):
+        return CategorySerializer(obj.sub_categories, many=True).data
 
 
 class ProductSerializer(serializers.ModelSerializer):

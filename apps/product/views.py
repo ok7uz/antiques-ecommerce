@@ -22,7 +22,29 @@ class Pagination(PageNumberPagination):
     max_page_size = 1000
 
 
-class ProductView(APIView):
+class ProductListView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: ProductListSerializer()},
+        tags=['Product'],
+    )
+    def get(self, request):
+        queryset = Product.objects.all()
+
+        data = request.query_params
+        category = data.get('category', None)
+
+        if category:
+            queryset = queryset.filter(
+                Q(category__id=category) | Q(category__parent__id=category) | Q(category__parent__parent__id=category)
+            )
+
+        serializer = ProductListSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ProductDetailView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
@@ -47,30 +69,13 @@ class NewProductsView(APIView):
         tags=['Product'],
     )
     def get(self, request):
-        queryset = Product.objects.all().order_by('-created')[:4]
+        queryset = Product.new_products.all().order_by('-created')
         serializer = ProductListSerializer(queryset, context={'request': request}, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CategoryView(APIView):
-    permission_classes = [AllowAny]
-
-    @swagger_auto_schema(
-        responses={200: MainCategorySerializer(many=True)},
-        tags=['Product'],
-    )
-    def get(self, request, id):
-        try:
-            instance = Category.objects.get(id=id)
-        except Category.DoesNotExist:
-            return Response({'error': 'Category with id {} does not exist.'.format(id)}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = MainCategorySerializer(instance, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class CategoryListView(APIView):
+class MainCategoryListView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
