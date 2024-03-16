@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.db.models import Q
 from itertools import chain
-from django.forms import Textarea
+from django.forms import Textarea, TextInput
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -11,20 +11,25 @@ from apps.product.filters import MainCategoryFilter, CategoryFilter
 from apps.product.inlines import ImagesInline, ProductInline, CategoryInline, SubCategoryInline
 from apps.product.models import Product, MainCategory, SubCategory, Category, BaseCategory
 
-admin.site.site_header = 'Администрация АнтикДекор'
-admin.site.site_title = 'Администрация АнтикДекор'
+admin.site.site_header = 'Администрация'
+admin.site.site_title = 'Администрация'
 admin.site.index_title = 'Добро пожаловать в администрацию АнтикДекор!'
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price')
+    fields = [
+        'name', 'vendor_code', 'category', 'authorship', 'price',
+        'is_new', 'description', 'size', 'history', 'video_url'
+    ]
     search_fields = ['name', 'description', 'category__name']
     list_filter = ['is_new', MainCategoryFilter]
-    inlines = (ImagesInline, )
+    inlines = [ImagesInline]
 
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': '100%'})},
+        models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
     }
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):

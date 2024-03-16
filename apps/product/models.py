@@ -6,8 +6,8 @@ from apps.product.managers import MainCategoryManager, SubCategoryManager, Categ
 
 class BaseCategory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField('Название', max_length=200)
-    parent = models.ForeignKey('self',verbose_name='Высшая категория', on_delete=models.CASCADE,
+    name = models.CharField('Название', max_length=128)
+    parent = models.ForeignKey('self', verbose_name='Высшая категория', on_delete=models.CASCADE,
                                related_name='sub_categories', null=True)
     image = models.ImageField('Изображение', upload_to='category/', null=True)
 
@@ -20,12 +20,11 @@ class BaseCategory(models.Model):
 
     def __str__(self):
         str_name = self.name
+        parent = self.parent
 
-        if self.parent:
-            str_name = f'{self.parent.name} / ' + str_name
-
-            if self.parent.parent:
-                str_name = f'{self.parent.parent.name} / ' + str_name
+        while parent:
+            str_name = f'{parent.name} / ' + str_name
+            parent = parent.parent
 
         return str_name
 
@@ -38,9 +37,6 @@ class MainCategory(BaseCategory):
         verbose_name = 'Главная категория'
         verbose_name_plural = 'Главная категории'
 
-    def __str__(self):
-        return self.name
-
 
 class Category(BaseCategory):
     objects = CategoryManager()
@@ -51,9 +47,6 @@ class Category(BaseCategory):
         verbose_name_plural = 'Категории'
 
 
-    def __str__(self):
-        return f'{self.parent.name} / {self.name}'
-
 
 class SubCategory(BaseCategory):
     objects = SubCategoryManager()
@@ -63,25 +56,28 @@ class SubCategory(BaseCategory):
         verbose_name = 'Подкатегория'
         verbose_name_plural = 'Подкатегории'
 
-    def __str__(self):
-        return f'{self.parent.parent.name} / {self.parent.name} / {self.name}'
-
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField('Название продукта', max_length=150, unique=True, null=False, blank=False)
+    name = models.CharField('Название продукта', max_length=255, unique=True, null=False, blank=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     description = models.TextField('Описание')
 
     price = models.PositiveIntegerField('Цена')
-    discount = models.PositiveIntegerField('Скидка', default=0)
     is_new = models.BooleanField('Новый?', default=False)
     created = models.DateTimeField('Дата создания', auto_now_add=True)
-    art = models.CharField('Арт', max_length=150)
-    history = models.CharField('История', max_length=150)
-    characteristic = models.CharField('Характеристики', max_length=150)
+    vendor_code = models.CharField('Артикул', max_length=32)
+    history = models.CharField('История', max_length=255)
+    characteristic = models.CharField('Характеристики', max_length=255)
     size = models.TextField('Размер')
     video_url = models.URLField('Ссылка на видео о продукте на YouTube', blank=True, null=True)
+
+    AUTHORSHIP_CHOICES = {
+        'western_europe': 'Западная Европа',
+        'russian_period': 'Русский период',
+        'soviet_period': 'Советский период',
+    }
+    authorship = models.CharField('Авторство', max_length=15, choices=AUTHORSHIP_CHOICES, blank=False, null=False)
 
     objects = models.Manager()
     new_products = NewProductsManager()
