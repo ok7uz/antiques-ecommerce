@@ -31,7 +31,7 @@ INSTALLED_APPS = [
 
     # apps
     'apps.product',
-    'apps.cart',
+    'apps.order',
     'apps.main_page'
 ]
 
@@ -106,18 +106,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = 'static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # (can be left in base.py)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -136,7 +133,7 @@ CKEDITOR_CONFIGS = {
         {
             'toolbar': 'full',
             'width': 'auto',
-            "versionCheck": False,
+            'versionCheck': False,
             'extraPlugins': ','.join([
                 'codesnippet',
             ]),

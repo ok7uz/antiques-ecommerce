@@ -10,6 +10,7 @@ class ImagesInline(admin.TabularInline):
     readonly_fields = ['image_preview']
     verbose_name = 'Изображение продукта'
     verbose_name_plural = 'Изображения продуктов'
+    show_change_link = True
 
     def image_preview(self, obj):
         if obj.image:

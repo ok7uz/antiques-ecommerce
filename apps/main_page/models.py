@@ -14,6 +14,9 @@ class Banner(models.Model):
         verbose_name = 'Баннер'
         verbose_name_plural = 'Баннеры'
 
+    def __str__(self):
+        return self.title
+    
 
 class Video(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -24,6 +27,9 @@ class Video(models.Model):
         verbose_name = 'видео'
         verbose_name_plural = 'видео'
 
+    def __str__(self):
+        return self.name
+    
 
 class News(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

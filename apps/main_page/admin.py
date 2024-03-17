@@ -5,10 +5,6 @@ from django.contrib.auth.models import User, Group
 from apps.main_page.models import Video, Banner, News
 
 
-admin.site.unregister(User)
-admin.site.unregister(Group)
-
-
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -27,10 +23,10 @@ class BannerAdmin(admin.ModelAdmin):
         image = obj.image
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="80px"></a>')
+            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="200px"></a>')
         return 'Нет изображения'
 
-    image_preview.short_description = 'Просмотр'
+    image_preview.short_description = ''
 
 
 @admin.register(News)
@@ -45,8 +41,11 @@ class NewsAdmin(admin.ModelAdmin):
         image = obj.image
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="80px"></a>')
+            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
         return 'Нет изображения'
 
-    image_preview.short_description = 'Просмотр'
+    image_preview.short_description = ''
 
+
+admin.site.unregister(User)
+admin.site.unregister(Group)
