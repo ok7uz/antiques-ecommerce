@@ -2,7 +2,7 @@ from .base import *  # Import everything from base.py
 
 # Development settings
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']  # Example allowed hosts for development
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'antik-decor-6eb29729b4d2.herokuapp.com']  # Example allowed hosts for development
 
 # Database settings (replace with your development database configuration)
 DATABASES = {
