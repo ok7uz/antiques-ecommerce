@@ -1,11 +1,9 @@
-import uuid
 from django.db import models
 
 from apps.product.models import Product
 
 
 class Order(models.Model):
-    id = models.AutoField(primary_key=True, editable=False)
     customer_name = models.CharField('Имя клиента', max_length=255)
     customer_phone = models.CharField('Телефон клиента', max_length=20)
     customer_email = models.EmailField('Email клиента', blank=True, null=True)
@@ -20,7 +18,7 @@ class Order(models.Model):
         ('cancelled', 'Отменено'),
     ], default='pending')
 
-    items = models.ManyToManyField(Product, through='OrderItem', related_name='orders', null=False)
+    items = models.ManyToManyField(Product, through='OrderItem', related_name='orders', blank=False)
     total_price = models.PositiveIntegerField('Сумма заказа')
 
     class Meta:

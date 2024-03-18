@@ -12,7 +12,6 @@ SECRET_KEY = '1hmdp!148l6!8d63p-&(5w*@*1(nwfmdhq8k__a_4fln^hatuh'
 
 # SECURITY WARNING: Don't run with debug turned on in production!
 # This can be overridden in local.py
-DEBUG = False
 
 ALLOWED_HOSTS = ['*']  # Update allowed hosts in production.py
 

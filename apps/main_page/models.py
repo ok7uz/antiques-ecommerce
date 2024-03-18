@@ -5,7 +5,6 @@ from django.db import models
 
 
 class Banner(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField('Заголовок', max_length=255)
     subtitle = models.CharField('Подзаголовок', max_length=255)
     image = models.ImageField('Изображение', upload_to='banner/')
@@ -19,7 +18,6 @@ class Banner(models.Model):
 
 
 class Video(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField('Название видео', max_length=255)
     url = models.URLField('Ссылка на YouTube')
 

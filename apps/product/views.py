@@ -7,10 +7,9 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from apps.product.models import Product, Category,  MainCategory
+from apps.product.models import Product, MainCategory
 from apps.product.serializers import (
     ProductListSerializer, ProductSerializer, MainCategorySerializer
 )

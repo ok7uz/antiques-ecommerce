@@ -1,14 +1,11 @@
-from django import forms
 from django.contrib import admin
-from django.db.models import Q
-from itertools import chain
 from django.forms import Textarea, TextInput
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from apps.product.filters import MainCategoryFilter, CategoryFilter
-from apps.product.inlines import ImagesInline, ProductInline, CategoryInline, SubCategoryInline
+from apps.product.inlines import ImagesInline, CategoryInline, SubCategoryInline
 from apps.product.models import Product, MainCategory, SubCategory, Category, BaseCategory, Genre
 
 admin.site.site_header = 'Администрация'

@@ -25,4 +25,5 @@ class OrderAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return obj and obj.status != 'delivered'
 
+
 admin.site.register(OrderItem)
