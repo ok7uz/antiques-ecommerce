@@ -50,10 +50,10 @@ class MainCategoryAdmin(admin.ModelAdmin):
         image = obj.image
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="80px"></a>')
+            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
         return 'No image'
 
-    image_preview.short_description = 'preview'
+    image_preview.short_description = ''
 
 
 @admin.register(Category)

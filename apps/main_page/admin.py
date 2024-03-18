@@ -13,6 +13,7 @@ admin.site.unregister(Group)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ['name']
     search_fields = ['name', 'url']
+    readonly_fields = []
     fields = ['name', 'url']
 
 
@@ -27,15 +28,15 @@ class BannerAdmin(admin.ModelAdmin):
         image = obj.image
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="80px"></a>')
+            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="200px"></a>')
         return 'Нет изображения'
 
-    image_preview.short_description = 'Просмотр'
+    image_preview.short_description = ''
 
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['date', 'title']
+    list_display = ['title', 'date']
     readonly_fields = ['image_preview']
     search_fields = ['title', 'content']
     list_filter = ['date']
@@ -45,8 +46,8 @@ class NewsAdmin(admin.ModelAdmin):
         image = obj.image
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="80px"></a>')
+            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
         return 'Нет изображения'
 
-    image_preview.short_description = 'Просмотр'
+    image_preview.short_description = ''
 
