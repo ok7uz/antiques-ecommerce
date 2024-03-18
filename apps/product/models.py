@@ -57,7 +57,7 @@ class SubCategory(BaseCategory):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField('Название', max_length=128)
 
     class Meta:
         verbose_name = 'Жанр'
