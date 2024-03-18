@@ -5,10 +5,6 @@ from django.contrib.auth.models import User, Group
 from apps.main_page.models import Video, Banner, News
 
 
-admin.site.unregister(User)
-admin.site.unregister(Group)
-
-
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -51,3 +47,6 @@ class NewsAdmin(admin.ModelAdmin):
 
     image_preview.short_description = ''
 
+
+admin.site.unregister(User)
+admin.site.unregister(Group)

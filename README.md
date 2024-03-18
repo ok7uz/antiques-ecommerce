@@ -8,13 +8,11 @@
 * Category Detail - __Uncompleted (Products filter)__
 * Subcategory - __Uncompleted__
 
-### news - completed
+### home_page - completed
 * News List - Completed
 * News Detail - Completed
+* Banner List - Completed
+* Videos List - Completed
 
 ### cart
 * __Uncompleted__
-
-### banner
-* Banner List - __Not created__
-* Videos List - __Not created__

@@ -51,7 +51,11 @@ class MainCategoryAdmin(admin.ModelAdmin):
         if image:
             image_url = image.url
             return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
+<<<<<<< HEAD
         return 'No image'
+=======
+        return ''
+>>>>>>> 4e4a22679fccc8344356776d3ed65917f21db102
 
     image_preview.short_description = ''
 
