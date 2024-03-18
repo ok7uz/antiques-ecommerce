@@ -3,6 +3,7 @@ from django.db import models
 
 from apps.product.models import Product
 
+
 class Order(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     customer_name = models.CharField('Имя клиента', max_length=255)

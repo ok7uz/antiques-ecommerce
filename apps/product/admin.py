@@ -9,7 +9,7 @@ from django.utils.safestring import mark_safe
 
 from apps.product.filters import MainCategoryFilter, CategoryFilter
 from apps.product.inlines import ImagesInline, ProductInline, CategoryInline, SubCategoryInline
-from apps.product.models import Product, MainCategory, SubCategory, Category, BaseCategory
+from apps.product.models import Product, MainCategory, SubCategory, Category, BaseCategory, Genre
 
 admin.site.site_header = 'Администрация'
 admin.site.site_title = 'Администрация'
@@ -20,7 +20,7 @@ admin.site.index_title = 'Добро пожаловать в администр�
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price')
     fields = [
-        'name', 'vendor_code', 'category', 'authorship', 'price',
+        'name', 'vendor_code', 'category', 'authorship', 'genre', 'price',
         'is_new', 'description', 'size', 'history', 'video_url'
     ]
     search_fields = ['name', 'description', 'category__name']
@@ -51,11 +51,7 @@ class MainCategoryAdmin(admin.ModelAdmin):
         if image:
             image_url = image.url
             return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
-<<<<<<< HEAD
-        return 'No image'
-=======
         return ''
->>>>>>> 4e4a22679fccc8344356776d3ed65917f21db102
 
     image_preview.short_description = ''
 
@@ -118,3 +114,10 @@ class SubCategoryAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     get_products.short_description = 'Продукты'
+
+
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    fields = ['name']
+    search_fields = ['name']
