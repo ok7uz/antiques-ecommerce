@@ -9,8 +9,8 @@ class BaseCategory(models.Model):
     parent = models.ForeignKey('self', verbose_name='Высшая категория', on_delete=models.CASCADE,
                                related_name='sub_categories', null=True)
     image = models.ImageField('Изображение', upload_to='category/', null=True)
-    top_menu = models.BooleanField('Верхнее меню', default=False)
-    left_menu = models.BooleanField('Левое меню', default=False)
+    is_top = models.BooleanField('Верхнее меню?', default=False)
+    is_left = models.BooleanField('Левое меню?', default=False)
 
     objects = models.Manager()
 

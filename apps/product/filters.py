@@ -30,17 +30,17 @@ class CategoryDirectionFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         queryset = Category.objects.all()
-        return [('top', 'Верхнее меню'), ('left', 'Левое меню')]
+        return [('is_top', 'Верхнее меню'), ('is_left', 'Левое меню')]
 
     def queryset(self, request, queryset):
         direction = self.value()
-        if direction == 'top':
+        if direction == 'is_top':
             try:
                 queryset = queryset.filter(top_menu=True)
                 return queryset
             except queryset.model.DoesNotExist:
                 return None
-        elif direction == 'left':
+        elif direction == 'is_left':
             try:
                 queryset = queryset.filter(left_menu=True)
                 return queryset

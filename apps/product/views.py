@@ -16,16 +16,13 @@ from apps.product.serializers import (
 )
 
 
-class Pagination(PageNumberPagination):
-    page_size = 5
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-
 
 class ProductListView(APIView):
     permission_classes = [AllowAny]
     category_id_param = openapi.Parameter(
-        'category_id', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='(main/sub)category id')
+        'category_id', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='(sub)category id')
+    left_category_id_param = openapi.Parameter(
+        'left_category_id', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='left (sub)category id')
 
     def get_queryset(self):
         queryset = Product.objects.all()
@@ -42,7 +39,7 @@ class ProductListView(APIView):
         return queryset
 
     @swagger_auto_schema(
-        manual_parameters=[category_id_param],
+        manual_parameters=[category_id_param, left_category_id_param],
         responses={200: ProductListSerializer(many=True)},
         tags=['Product'],
     )
@@ -64,7 +61,7 @@ class ProductDetailView(APIView):
         try:
             instance = Product.objects.get(id=id)
         except Product.DoesNotExist:
-            return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = ProductSerializer(instance, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -80,7 +77,6 @@ class NewProductsView(APIView):
     def get(self, request):
         queryset = Product.new_products.all().order_by('-created')
         serializer = ProductListSerializer(queryset, context={'request': request}, many=True)
-
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -89,7 +85,7 @@ class CategoryListView(APIView):
 
     @swagger_auto_schema(
         responses={200: CategorySerializer(many=True)},
-        tags=['Product'],
+        tags=['Category'],
     )
     def get(self, request):
         queryset = Category.objects.filter(top_menu=True)
@@ -102,7 +98,7 @@ class CategoryView(APIView):
 
     @swagger_auto_schema(
         responses={200: CategoryDetailSerializer()},
-        tags=['Product'],
+        tags=['Category'],
     )
     def get(self, request, category_id):
         queryset = Category.objects.filter(top_menu=True)
@@ -111,7 +107,7 @@ class CategoryView(APIView):
             serializer = CategoryDetailSerializer(category, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except queryset.model.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 def custom404(request, exception=None):

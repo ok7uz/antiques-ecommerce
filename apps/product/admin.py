@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from apps.product.filters import CategoryFilter, CategoryDirectionFilter
-from apps.product.inlines import ImagesInline, CategoryInline, SubCategoryInline
+from apps.product.inlines import ImagesInline, SubCategoryInline, ProductInline
 from apps.product.models import Product, SubCategory, Category, BaseCategory
 
 admin.site.site_header = 'Администрация'
@@ -31,44 +31,24 @@ class ProductAdmin(admin.ModelAdmin):
         # models.ManyToManyField: {'widget': CheckboxSelectMultiple},
     }
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'category':
-            kwargs['queryset'] = BaseCategory.objects.filter(sub_categories__isnull=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    fields = ['name', 'top_menu', 'left_menu',]
+    fields = ['name', 'is_top', 'is_left',]
     readonly_fields = []
     search_fields = ['name']
     list_filter = [CategoryDirectionFilter]
+    inlines = [SubCategoryInline]
 
 
 @admin.register(SubCategory)
 class SubCategoryAdmin(admin.ModelAdmin):
-    fields = ['name', 'parent', 'get_products']
-    readonly_fields = ['get_products']
+    fields = ['name', 'parent']
     search_fields = ['name', 'parent__name', 'parent__parent__name']
     list_filter = [CategoryFilter]
-
-    def get_products(self, obj):
-        products = obj.products.all()
-
-        if not products:
-            return 'Нет продукта'
-
-        return_html = ''
-
-        for product in products:
-            product_link = reverse('admin:product_product_change', args=[product.id])
-            return_html += f'<a href="{product_link}">{product.name}</a><br>'
-        print(return_html)
-        return mark_safe(return_html)
+    # inlines = [ProductInline]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'parent':
             kwargs['queryset'] = Category.objects.all()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-    get_products.short_description = 'Продукты'
