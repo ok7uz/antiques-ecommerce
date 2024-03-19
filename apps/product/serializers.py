@@ -48,10 +48,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class CategoryDetailSerializer(serializers.Serializer):
     sub_categories = SubCategorySerializer(many=True)
-    products = ProductListSerializer(many=True)
-    left_menu = serializers.SerializerMethodField()
+    sidebar = serializers.SerializerMethodField()
 
     @swagger_serializer_method(CategorySerializer(many=True))
-    def get_left_menu(self, obj):
+    def get_sidebar(self, obj):
         return CategorySerializer(Category.objects.filter(left_menu=True), many=True).data
 
