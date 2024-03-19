@@ -1,20 +1,24 @@
+from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
 from apps.order.models import Order, OrderItem
-
-
-class OrderItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = ['product']
+from apps.product.models import Product
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True, write_only=True)
+    products = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
-        fields = ['customer_name', 'customer_phone', 'customer_email', 'customer_address', 'items', 'total_price']
+        fields = ['customer_name', 'customer_phone', 'customer_email', 'customer_address', 'total_price', 'products']
+
+    @swagger_serializer_method(serializers.ListField(child=serializers.UUIDField()))
+    def get_products(self):
+        return self.products
+
+    def set_products(self):
+        self.products = Product.objects.all()
+        return self.products
 
     def create(self, validated_data):
         data = validated_data

@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.http import JsonResponse
+from drf_yasg import openapi
 
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -9,9 +10,9 @@ from rest_framework.views import APIView
 
 from drf_yasg.utils import swagger_auto_schema
 
-from apps.product.models import Product, MainCategory
+from apps.product.models import Product, Category
 from apps.product.serializers import (
-    ProductListSerializer, ProductSerializer, MainCategorySerializer
+    ProductListSerializer, ProductSerializer, CategorySerializer, CategoryDetailSerializer
 )
 
 
@@ -23,23 +24,32 @@ class Pagination(PageNumberPagination):
 
 class ProductListView(APIView):
     permission_classes = [AllowAny]
+    category_id_param = openapi.Parameter(
+        'category_id', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='(main/sub)category id')
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        data = self.request.query_params
+        category_id = data.get('category_id', None)
+        left_category_id = data.get('left_category_id', None)
+
+        if category_id:
+            queryset = queryset.filter(category__id=category_id)
+
+        if left_category_id:
+            queryset = queryset.filter(category__id=left_category_id)
+
+        return queryset
 
     @swagger_auto_schema(
-        responses={200: ProductListSerializer()},
+        manual_parameters=[category_id_param],
+        responses={200: ProductListSerializer(many=True)},
         tags=['Product'],
     )
     def get(self, request):
-        queryset = Product.objects.all()
-
-        data = request.query_params
-        category = data.get('category', None)
-
-        if category:
-            queryset = queryset.filter(
-                Q(category__id=category) | Q(category__parent__id=category) | Q(category__parent__parent__id=category)
-            )
-
-        serializer = ProductListSerializer(queryset, many=True)
+        queryset = self.get_queryset()
+        print(queryset)
+        serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -56,7 +66,7 @@ class ProductDetailView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = ProductSerializer(instance, context={'request': self.request})
+        serializer = ProductSerializer(instance, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -74,17 +84,34 @@ class NewProductsView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class MainCategoryListView(APIView):
+class CategoryListView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
-        responses={200: MainCategorySerializer(many=True)},
+        responses={200: CategorySerializer(many=True)},
         tags=['Product'],
     )
     def get(self, request):
-        queryset = MainCategory.objects.all()
-        serializer = MainCategorySerializer(queryset, context={'request': request}, many=True)
+        queryset = Category.objects.filter(top_menu=True)
+        serializer = CategorySerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CategoryView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: CategoryDetailSerializer()},
+        tags=['Product'],
+    )
+    def get(self, request, category_id):
+        queryset = Category.objects.filter(top_menu=True)
+        try:
+            category = queryset.get(id=category_id)
+            serializer = CategoryDetailSerializer(category, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except queryset.model.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 def custom404(request, exception=None):

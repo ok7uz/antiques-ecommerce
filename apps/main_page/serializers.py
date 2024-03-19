@@ -5,20 +5,15 @@ from apps.main_page.models import News, Banner, Video
 
 
 class NewsListSerializer(serializers.ModelSerializer):
-    url = serializers.SerializerMethodField(read_only=True)
-
     class Meta:
         model = News
-        fields = ['id', 'url', 'date', 'image', 'title']
-
-    def get_url(self, obj):
-        return reverse('news-detail', args=[obj.id])
+        fields = ['id', 'date', 'image', 'title', 'content']
 
 
 class NewsSerializer(NewsListSerializer):
     class Meta:
         model = NewsListSerializer.Meta.model
-        fields = ['id', 'date', 'title', 'content']
+        fields = ['id', 'date', 'image', 'title', 'content']
 
 
 class BannerSerializer(serializers.ModelSerializer):
@@ -30,4 +25,4 @@ class BannerSerializer(serializers.ModelSerializer):
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
-        fields = ['name', 'url']
+        fields = ['title', 'url', 'banner']

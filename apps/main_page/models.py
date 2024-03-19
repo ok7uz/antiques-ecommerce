@@ -18,15 +18,16 @@ class Banner(models.Model):
 
 
 class Video(models.Model):
-    name = models.CharField('Название видео', max_length=255)
+    title = models.CharField('Название', max_length=255)
     url = models.URLField('Ссылка на YouTube')
+    banner = models.ImageField('Изображение для видео', upload_to='video-banners/', null=False, blank=False)
 
     class Meta:
         verbose_name = 'видео'
         verbose_name_plural = 'видео'
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class News(models.Model):
@@ -34,7 +35,7 @@ class News(models.Model):
     title = models.CharField('Название', max_length=255)
     content = RichTextUploadingField('Контент')
     image = models.ImageField('Изображение', upload_to='news/')
-    date = models.DateTimeField('Дата создания', auto_now_add=True)
+    date = models.DateField('Дата создания', auto_now_add=True)
 
     class Meta:
         ordering = ['-date']

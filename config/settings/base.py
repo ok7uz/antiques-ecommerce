@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'ckeditor',
+    'corsheaders',
 
     # apps
     'apps.product',
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -121,6 +123,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    "DATE_INPUT_FORMATS": ["%d-%m-%Y"],
 }
 
 # CKEditor Settings
@@ -132,9 +135,22 @@ CKEDITOR_CONFIGS = {
         {
             'toolbar': 'full',
             'width': 'auto',
+            'height': '400px',
             'versionCheck': False,
             'extraPlugins': ','.join([
                 'codesnippet',
             ]),
         },
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8000",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = True
+X_FRAME_OPTIONS = "SAMEORIGIN"

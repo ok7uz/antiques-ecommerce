@@ -7,10 +7,10 @@ from apps.main_page.models import Video, Banner, News
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    search_fields = ['name', 'url']
+    list_display = ['title']
+    search_fields = ['title', 'url']
     readonly_fields = []
-    fields = ['name', 'url']
+    fields = ['title', 'url', 'banner']
 
 
 @admin.register(Banner)

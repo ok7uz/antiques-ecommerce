@@ -1,22 +1,23 @@
 import uuid
 from django.db import models
 
-from apps.product.managers import MainCategoryManager, SubCategoryManager, CategoryManager, NewProductsManager
+from apps.product.managers import SubCategoryManager, CategoryManager, NewProductsManager
 
 
 class BaseCategory(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField('Название', max_length=128)
     parent = models.ForeignKey('self', verbose_name='Высшая категория', on_delete=models.CASCADE,
                                related_name='sub_categories', null=True)
     image = models.ImageField('Изображение', upload_to='category/', null=True)
+    top_menu = models.BooleanField('Верхнее меню', default=False)
+    left_menu = models.BooleanField('Левое меню', default=False)
 
     objects = models.Manager()
 
     class Meta:
         ordering = ['name']
-        verbose_name = 'category'
-        verbose_name_plural = 'categories'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
     def __str__(self):
         str_name = self.name
@@ -27,15 +28,6 @@ class BaseCategory(models.Model):
             parent = parent.parent
 
         return str_name
-
-
-class MainCategory(BaseCategory):
-    objects = MainCategoryManager()
-
-    class Meta:
-        proxy = True
-        verbose_name = 'Главная категория'
-        verbose_name_plural = 'Главная категории'
 
 
 class Category(BaseCategory):
@@ -56,21 +48,9 @@ class SubCategory(BaseCategory):
         verbose_name_plural = 'Подкатегории'
 
 
-class Genre(models.Model):
-    name = models.CharField('Название', max_length=128)
-
-    class Meta:
-        verbose_name = 'Жанр'
-        verbose_name_plural = 'Жанры'
-
-    def __str__(self):
-        return self.name
-
-
 class Product(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField('Название продукта', max_length=255, unique=True, null=False, blank=False)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    category = models.ManyToManyField(BaseCategory, verbose_name='Категории', related_name='products')
     description = models.TextField('Описание')
 
     price = models.PositiveIntegerField('Цена')
@@ -81,14 +61,6 @@ class Product(models.Model):
     characteristic = models.CharField('Характеристики', max_length=255)
     size = models.TextField('Размер')
     video_url = models.URLField('Ссылка на видео о продукте на YouTube', blank=True, null=True)
-
-    AUTHORSHIP_CHOICES = {
-        'western_europe': 'Западная Европа',
-        'russian_period': 'Русский период',
-        'soviet_period': 'Советский период',
-    }
-    authorship = models.CharField('Авторство', max_length=15, choices=AUTHORSHIP_CHOICES, blank=False, null=False)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
 
     objects = models.Manager()
     new_products = NewProductsManager()

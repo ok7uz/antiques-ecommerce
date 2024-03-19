@@ -21,7 +21,7 @@ class NewsView(APIView):
         except News.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = NewsSerializer(instance, context={'request': self.request})
+        serializer = NewsSerializer(instance, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -34,7 +34,7 @@ class NewsListView(APIView):
     )
     def get(self, request):
         queryset = News.objects.all()
-        serializer = NewsListSerializer(queryset, many=True)
+        serializer = NewsListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -47,7 +47,7 @@ class BannerListView(APIView):
     )
     def get(self, request):
         queryset = Banner.objects.all()
-        serializer = BannerSerializer(queryset, many=True)
+        serializer = BannerSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -60,5 +60,5 @@ class VideoSerializerListView(APIView):
     )
     def get(self, request):
         queryset = Video.objects.all()
-        serializer = VideoSerializer(queryset, many=True)
+        serializer = VideoSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)

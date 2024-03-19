@@ -22,14 +22,11 @@ class ImagesInline(admin.TabularInline):
 
 class ProductInline(admin.TabularInline):
     model = Product
-    fields = ('link_to_product', 'price', 'image_preview')
-    readonly_fields = ('link_to_product', 'price', 'image_preview')
+    fields = ('name', 'price', 'image_preview')
+    readonly_fields = ('name', 'price', 'image_preview')
     can_delete = False
     extra = 0
-
-    def link_to_product(self, obj):
-        link = reverse('admin:product_product_change', args=[obj.id])
-        return mark_safe('<a href="{}">{}</a>'.format(link, obj.name))
+    show_change_link = True
 
     def image_preview(self, obj):
         product_image = obj.images.first()
@@ -39,7 +36,6 @@ class ProductInline(admin.TabularInline):
         return 'No image'
 
     image_preview.short_description = 'image'
-    link_to_product.short_description = 'name'
 
 
 class CategoryInline(admin.TabularInline):
