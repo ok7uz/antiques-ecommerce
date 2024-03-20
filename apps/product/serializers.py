@@ -1,4 +1,3 @@
-from django.urls import reverse
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
@@ -53,4 +52,3 @@ class CategoryDetailSerializer(serializers.Serializer):
     @swagger_serializer_method(CategorySerializer(many=True))
     def get_sidebar(self, obj):
         return CategorySerializer(Category.objects.filter(is_left=True), many=True).data
-
