@@ -2,17 +2,17 @@ from .base import *  # Import everything from base.py
 
 # Production settings
 DEBUG = False
-ALLOWED_HOSTS = ['your_production_domain']  # Replace with your production domain
+ALLOWED_HOSTS = ['*']  # Replace with your production domain
 
 # Database settings (replace with your production database configuration)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # Example engine (change if needed)
-        'NAME': 'your_database_name',
-        'USER': 'your_username',
-        'PASSWORD': 'your_password',
-        'HOST': 'your_database_host',
-        'PORT': '5432',  # Example port (change if needed)
+        'NAME': 'decor',
+        'USER': 'admin',
+        'PASSWORD': 'decor$2001',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
