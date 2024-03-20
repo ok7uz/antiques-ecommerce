@@ -1,18 +1,17 @@
-# antik decor
+# AntikDecor
 
-### product
+### Product - Completed
 * Product Detail - Completed
 * Product List - Completed
-* New Products - __Uncompleted__
-* Category List - __Uncompleted (Serializers)__
-* Category Detail - __Uncompleted (Products filter)__
-* Subcategory - __Uncompleted__
+* New Products - Completed
+* Category List - Completed
+* Category Detail -Completed
 
-### home_page - completed
+### Home Page - Completed
 * News List - Completed
 * News Detail - Completed
 * Banner List - Completed
 * Videos List - Completed
 
-### cart
+### Order
 * __Uncompleted__
