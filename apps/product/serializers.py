@@ -15,7 +15,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = [
+            'name', 'price', 'vendor_code', 'history', 'characteristic',
+            'size', 'images', 'video_url', 'description'
+        ]
 
     @swagger_serializer_method(serializers.ListField(child=serializers.URLField()))
     def get_images(self, obj):
@@ -26,9 +29,15 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(ProductSerializer):
+    catalog = serializers.SerializerMethodField()
+
     class Meta:
         model = ProductSerializer.Meta.model
-        fields = ['id', 'name', 'price', 'images']
+        fields = ['id', 'name', 'catalog', 'price', 'images']
+
+    def get_catalog(self, obj):
+        category = obj.category.filter(is_top=True).first()
+        return category.name if category else None
 
 
 class SubCategorySerializer(serializers.ModelSerializer):

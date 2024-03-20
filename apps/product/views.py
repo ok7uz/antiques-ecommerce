@@ -1,14 +1,11 @@
-from django.db.models import Q
 from django.http import JsonResponse
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
-
-from drf_yasg.utils import swagger_auto_schema
 
 from apps.product.models import Product, Category
 from apps.product.serializers import (
@@ -16,13 +13,12 @@ from apps.product.serializers import (
 )
 
 
-
 class ProductListView(APIView):
     permission_classes = [AllowAny]
     category_id_param = openapi.Parameter(
         'category_id', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='(sub)category id')
-    left_category_id_param = openapi.Parameter(
-        'left_category_id', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='left (sub)category id')
+    sidebar_id_param = openapi.Parameter(
+        'sidebar_id', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='sidebar (sub)category id')
 
     def get_queryset(self):
         queryset = Product.objects.all()
@@ -39,13 +35,12 @@ class ProductListView(APIView):
         return queryset
 
     @swagger_auto_schema(
-        manual_parameters=[category_id_param, left_category_id_param],
+        manual_parameters=[category_id_param, sidebar_id_param],
         responses={200: ProductListSerializer(many=True)},
         tags=['Product'],
     )
     def get(self, request):
         queryset = self.get_queryset()
-        print(queryset)
         serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 

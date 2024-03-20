@@ -1,4 +1,3 @@
-from django.urls import reverse
 from rest_framework import serializers
 
 from apps.main_page.models import News, Banner, Video

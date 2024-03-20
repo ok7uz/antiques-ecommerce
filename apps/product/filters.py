@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db.models import Q
 
 from apps.product.models import Category, SubCategory, Product
 
@@ -33,23 +32,21 @@ class CategoryDirectionFilter(admin.SimpleListFilter):
     parameter_name = 'direction'
 
     def lookups(self, request, model_admin):
-        queryset = Category.objects.all()
-        return [('is_top', 'Верхнее меню'), ('is_left', 'Левое меню')]
+        return [('top', 'Верхнее меню'), ('left', 'Левое меню')]
 
     def queryset(self, request, queryset):
         direction = self.value()
-        if direction == 'is_top':
+        if direction == 'top':
             try:
-                queryset = queryset.filter(top_menu=True)
+                queryset = queryset.filter(is_top=True)
                 return queryset
             except queryset.model.DoesNotExist:
                 return None
-        elif direction == 'is_left':
+        elif direction == 'left':
             try:
-                queryset = queryset.filter(left_menu=True)
+                queryset = queryset.filter(is_left=True)
                 return queryset
             except queryset.model.DoesNotExist:
                 return None
 
         return queryset
-

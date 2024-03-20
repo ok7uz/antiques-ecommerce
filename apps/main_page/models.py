@@ -10,6 +10,7 @@ class Banner(models.Model):
     image = models.ImageField('Изображение', upload_to='banner/')
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Баннер'
         verbose_name_plural = 'Баннеры'
 
@@ -23,6 +24,7 @@ class Video(models.Model):
     banner = models.ImageField('Изображение для видео', upload_to='video-banners/', null=False, blank=False)
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'видео'
         verbose_name_plural = 'видео'
 
