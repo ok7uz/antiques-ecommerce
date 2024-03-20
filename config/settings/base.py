@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'ckeditor',
     'corsheaders',
+    'import_export',
 
     # apps
     'apps.product',

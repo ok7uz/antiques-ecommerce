@@ -1,7 +1,7 @@
 from .base import *  # Import everything from base.py
 
 # Production settings
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']  # Replace with your production domain
 
 # Database settings (replace with your production database configuration)

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from .models import Order, OrderItem
 
@@ -15,7 +16,7 @@ class OrderProductInline(admin.TabularInline):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['__str__', 'total_price', 'status', 'created']
     search_fields = ['id', 'customer_name', 'customer_phone']
     list_filter = ['status', 'created']

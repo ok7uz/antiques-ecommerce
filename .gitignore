@@ -6,6 +6,3 @@ media/
 *.log
 *.pot
 *.pyc
-
-[safe]
-    directory = *
