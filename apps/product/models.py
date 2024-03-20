@@ -49,17 +49,17 @@ class SubCategory(BaseCategory):
 
 
 class Product(models.Model):
-    name = models.CharField('Название продукта', max_length=255, unique=True, null=False, blank=False)
-    category = models.ManyToManyField(BaseCategory, verbose_name='Категории', related_name='products')
-    description = models.TextField('Описание')
+    name = models.CharField('Название продукта', max_length=255, unique=False, null=False, blank=False)
+    category = models.ManyToManyField(BaseCategory, verbose_name='Категории', related_name='products', null=True, blank=True)
+    description = models.TextField('Описание', null=True, blank=True)
 
-    price = models.PositiveIntegerField('Цена')
-    is_new = models.BooleanField('Новый?', default=False)
+    price = models.PositiveIntegerField('Цена', null=True, blank=True)
+    is_new = models.BooleanField('Новый?', default=False, null=True, blank=True)
     created = models.DateTimeField('Дата создания', auto_now_add=True)
-    vendor_code = models.CharField('Артикул', max_length=32)
-    history = models.CharField('История', max_length=255)
-    characteristic = models.CharField('Характеристики', max_length=255)
-    size = models.TextField('Размер')
+    vendor_code = models.CharField('Артикул', max_length=32, null=True, blank=True)
+    history = models.CharField('История', max_length=255, null=True, blank=True)
+    characteristic = models.CharField('Характеристики', max_length=255, null=True, blank=True)
+    size = models.TextField('Размер', null=True, blank=True)
     video_url = models.URLField('Ссылка на видео о продукте на YouTube', blank=True, null=True)
 
     objects = models.Manager()

@@ -14,9 +14,13 @@ class CategoryFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         category_id = self.value()
+        model = queryset.model
         if self.value() is not None:
             try:
-                queryset = queryset.filter(parent__id=category_id)
+                if model == SubCategory:
+                    queryset = queryset.filter(parent__id=category_id)
+                elif model == Product:
+                    queryset = queryset.filter(category__id=category_id)
                 return queryset
             except queryset.model.DoesNotExist:
                 return None

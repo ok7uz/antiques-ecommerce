@@ -52,5 +52,5 @@ class CategoryDetailSerializer(serializers.Serializer):
 
     @swagger_serializer_method(CategorySerializer(many=True))
     def get_sidebar(self, obj):
-        return CategorySerializer(Category.objects.filter(left_menu=True), many=True).data
+        return CategorySerializer(Category.objects.filter(is_left=True), many=True).data
 

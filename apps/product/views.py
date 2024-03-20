@@ -28,13 +28,13 @@ class ProductListView(APIView):
         queryset = Product.objects.all()
         data = self.request.query_params
         category_id = data.get('category_id', None)
-        left_category_id = data.get('left_category_id', None)
+        sidebar_id = data.get('sidebar_id', None)
 
         if category_id:
             queryset = queryset.filter(category__id=category_id)
 
-        if left_category_id:
-            queryset = queryset.filter(category__id=left_category_id)
+        if sidebar_id:
+            queryset = queryset.filter(category__id=sidebar_id)
 
         return queryset
 
@@ -88,7 +88,7 @@ class CategoryListView(APIView):
         tags=['Category'],
     )
     def get(self, request):
-        queryset = Category.objects.filter(top_menu=True)
+        queryset = Category.objects.filter(is_top=True)
         serializer = CategorySerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -101,7 +101,7 @@ class CategoryView(APIView):
         tags=['Category'],
     )
     def get(self, request, category_id):
-        queryset = Category.objects.filter(top_menu=True)
+        queryset = Category.objects.filter(is_top=True)
         try:
             category = queryset.get(id=category_id)
             serializer = CategoryDetailSerializer(category, context={'request': request})
