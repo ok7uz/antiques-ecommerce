@@ -16,9 +16,6 @@ DATABASES = {
     }
 }
 
-# Static files served by a web server (like Nginx or Apache) in production
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # Configure media storage for production (e.g., using Amazon S3)
 

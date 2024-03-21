@@ -6,7 +6,7 @@ from import_export.admin import ImportExportModelAdmin
 
 from apps.product.filters import CategoryFilter, CategoryDirectionFilter
 from apps.product.inlines import ImagesInline, SubCategoryInline
-from apps.product.models import Product, SubCategory, Category
+from apps.product.models import Product, SubCategory, Category, ProductImage
 
 admin.site.site_header = 'Администрация'
 admin.site.site_title = 'Администрация'
@@ -40,7 +40,6 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     image_preview.short_description = ''
 
-
 @admin.register(Category)
 class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'is_top', 'is_left']
@@ -63,3 +62,11 @@ class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         if db_field.name == 'parent':
             kwargs['queryset'] = Category.objects.all()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+
+@admin.register(ProductImage)
+class ProductImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ['product', 'image']
+    fields = ['product', 'image']
+    search_fields = ['product__name', 'image']

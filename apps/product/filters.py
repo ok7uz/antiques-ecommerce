@@ -8,6 +8,7 @@ class CategoryFilter(admin.SimpleListFilter):
     parameter_name = 'category_id'
 
     def lookups(self, request, model_admin):
+        print(model_admin)
         queryset = Category.objects.all()
         return queryset.values_list('id', 'name')
 
