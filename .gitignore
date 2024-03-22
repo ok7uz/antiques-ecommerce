@@ -2,6 +2,7 @@
 __pycache__/
 env/
 media/
+static/
 
 db.sqlite3
 *.log
