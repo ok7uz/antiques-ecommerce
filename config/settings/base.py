@@ -1,14 +1,17 @@
 import os
+from dotenv import load_dotenv
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
+DEBUG = True
 # Quick-start development settings - can be overridden in local.py or production.py
 
 # SECURITY WARNING: Update this before deploying in production!
-SECRET_KEY = '1hmdp!148l6!8d63p-&(5w*@*1(nwfmdhq8k__a_4fln^hatuh'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: Don't run with debug turned on in production!
 # This can be overridden in local.py
