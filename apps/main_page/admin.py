@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User, Group
+from import_export.admin import ImportExportModelAdmin
 
 from apps.main_page.models import Video, Banner, News
 
 
 @admin.register(Video)
-class VideoAdmin(admin.ModelAdmin):
+class VideoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title', 'url']
     readonly_fields = []
@@ -14,7 +15,7 @@ class VideoAdmin(admin.ModelAdmin):
 
 
 @admin.register(Banner)
-class BannerAdmin(admin.ModelAdmin):
+class BannerAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['title']
     readonly_fields = ['image_preview']
     search_fields = ['title', 'subtitle']
@@ -31,7 +32,7 @@ class BannerAdmin(admin.ModelAdmin):
 
 
 @admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
+class NewsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['title', 'date']
     readonly_fields = ['image_preview']
     search_fields = ['title', 'content']

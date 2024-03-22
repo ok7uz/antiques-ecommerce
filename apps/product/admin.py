@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.forms import Textarea, TextInput
 from django.db import models
 from django.utils.safestring import mark_safe
+from import_export.admin import ImportExportModelAdmin
 
 from apps.product.filters import CategoryFilter, CategoryDirectionFilter
 from apps.product.inlines import ImagesInline, SubCategoryInline
@@ -13,7 +14,7 @@ admin.site.index_title = 'Добро пожаловать в администр�
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'is_new', 'price')
     fields = [
         ('is_new', 'image_preview'), 'name', 'vendor_code', 'category', 'price', 'description',
@@ -41,7 +42,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'is_top', 'is_left']
     fields = ['name', 'is_top', 'is_left',]
     readonly_fields = []
@@ -51,7 +52,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(SubCategory)
-class SubCategoryAdmin(admin.ModelAdmin):
+class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'parent']
     fields = ['name', 'parent']
     search_fields = ['name', 'parent__name', 'parent__parent__name']
