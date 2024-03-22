@@ -14,7 +14,7 @@ class BaseCategory(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ['name']
+        ordering = ['-is_top', 'parent__id']
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
@@ -34,7 +34,7 @@ class Category(BaseCategory):
 
     class Meta:
         proxy = True
-        ordering = ['-is_top']
+        ordering = ['-is_top', 'id']
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
@@ -75,9 +75,13 @@ class Product(models.Model):
         return self.name
 
 
+def upload_to(instance, filename):
+    return "product/{}-{}.jpg".format(instance.product.id, instance.product.images.count() + 1)
+
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='images')
-    image = models.ImageField(upload_to='products/', null=True, blank=True, default=None)
+    image = models.ImageField(upload_to=upload_to, null=True, blank=True, default=None)
 
     objects = models.Manager()
 
