@@ -8,7 +8,7 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # Example engine (change if needed)
-        'NAME': 'decor',
+        'NAME': 'postgres',
         'USER': 'admin',
         'PASSWORD': 'decor$2001',
         'HOST': 'localhost',
