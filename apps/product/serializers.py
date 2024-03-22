@@ -47,11 +47,18 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    sub_categories = SubCategorySerializer(many=True)
+    sub_categories = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
         fields = ['id', 'name', 'sub_categories']
+
+    @swagger_serializer_method(SubCategorySerializer(many=True))
+    def get_sub_categories(self, obj):
+        catalog = self.context['catalog']
+        sub_categories = obj.sub_categories.all()
+        sub_categories = sub_categories.filter(products__category=catalog).distinct()
+        return SubCategorySerializer(sub_categories, many=True).data
 
 
 class CategoryDetailSerializer(serializers.Serializer):
@@ -61,4 +68,4 @@ class CategoryDetailSerializer(serializers.Serializer):
     @swagger_serializer_method(CategorySerializer(many=True))
     def get_sidebar(self, obj):
         querysat = Category.objects.filter(is_left=True, products__category=obj).distinct()
-        return CategorySerializer(querysat, many=True).data
+        return CategorySerializer(querysat, many=True, context={'catalog': obj}).data

@@ -67,7 +67,7 @@ class Product(models.Model):
     new_products = NewProductsManager()
 
     class Meta:
-        ordering = ['-created', 'name']
+        ordering = ['-is_new', 'name']
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
 

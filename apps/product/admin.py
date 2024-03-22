@@ -4,9 +4,10 @@ from django.db import models
 from django.utils.safestring import mark_safe
 from import_export.admin import ImportExportModelAdmin
 
-from apps.product.filters import CategoryFilter, CategoryDirectionFilter
+from apps.product.filters import CategoryFilter, CategoryDirectionFilter, ProductCategoryFilter, \
+    ProductSubCategoryFilter
 from apps.product.inlines import ImagesInline, SubCategoryInline
-from apps.product.models import Product, SubCategory, Category, ProductImage
+from apps.product.models import Product, SubCategory, Category
 
 admin.site.site_header = 'Администрация'
 admin.site.site_title = 'Администрация'
@@ -15,13 +16,13 @@ admin.site.index_title = 'Добро пожаловать в администр�
 
 @admin.register(Product)
 class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('name', 'is_new', 'price')
+    list_display = ('name', 'vendor_code', 'is_new', 'price')
     fields = [
         ('is_new', 'image_preview'), 'name', 'vendor_code', 'category', 'price', 'description',
         'characteristic', 'size', 'history', 'video_url'
     ]
     search_fields = ['name', 'description', 'category__name', 'characteristic']
-    list_filter = ['is_new', CategoryFilter]
+    list_filter = ['is_new', ProductCategoryFilter, ProductSubCategoryFilter]
     readonly_fields = ['image_preview']
     inlines = [ImagesInline]
     filter_horizontal = ('category',)
@@ -40,6 +41,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     image_preview.short_description = ''
 
+
 @admin.register(Category)
 class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'is_top', 'is_left']
@@ -56,17 +58,8 @@ class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     fields = ['name', 'parent']
     search_fields = ['name', 'parent__name', 'parent__parent__name']
     list_filter = [CategoryFilter]
-    # inlines = [ProductInline]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'parent':
             kwargs['queryset'] = Category.objects.all()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-
-@admin.register(ProductImage)
-class ProductImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ['product', 'image']
-    fields = ['product', 'image']
-    search_fields = ['product__name', 'image']

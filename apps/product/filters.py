@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.product.models import Category, SubCategory, Product
+from apps.product.models import Category, SubCategory
 
 
 class CategoryFilter(admin.SimpleListFilter):
@@ -14,13 +14,51 @@ class CategoryFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         category_id = self.value()
-        model = queryset.model
         if self.value() is not None:
             try:
-                if model == SubCategory:
-                    queryset = queryset.filter(parent__id=category_id)
-                elif model == Product:
-                    queryset = queryset.filter(category__id=category_id)
+                queryset = queryset.filter(parent__id=category_id)
+                return queryset
+            except queryset.model.DoesNotExist:
+                return None
+
+        return queryset
+
+
+class ProductCategoryFilter(admin.SimpleListFilter):
+    title = 'Категории'
+    parameter_name = 'category_id'
+
+    def lookups(self, request, model_admin):
+        print(model_admin)
+        queryset = Category.objects.filter(is_top=True)
+        return queryset.values_list('id', 'name')
+
+    def queryset(self, request, queryset):
+        category_id = self.value()
+        if self.value() is not None:
+            try:
+                queryset = queryset.filter(category__id=category_id)
+                return queryset
+            except queryset.model.DoesNotExist:
+                return None
+
+        return queryset
+
+
+class ProductSubCategoryFilter(admin.SimpleListFilter):
+    title = 'Подкатегории'
+    parameter_name = 'subcategory_id'
+
+    def lookups(self, request, model_admin):
+        print(model_admin)
+        queryset = SubCategory.objects.all()
+        return queryset.values_list('id', 'name')
+
+    def queryset(self, request, queryset):
+        subcategory_id = self.value()
+        if self.value() is not None:
+            try:
+                queryset = queryset.filter(category__id=subcategory_id)
                 return queryset
             except queryset.model.DoesNotExist:
                 return None

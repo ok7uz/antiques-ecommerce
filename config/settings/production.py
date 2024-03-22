@@ -1,8 +1,8 @@
-from .base import *  # Import everything from base.py
+from .base import *
 
-# Production settings
-DEBUG = True
-ALLOWED_HOSTS = ['*']  # Replace with your production domain
+
+DEBUG = False
+ALLOWED_HOSTS = ['*']
 
 # Database settings (replace with your production database configuration)
 DATABASES = {
@@ -15,8 +15,3 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-
-# Configure media storage for production (e.g., using Amazon S3)
-
-# Email settings for production (use a reliable mail service)

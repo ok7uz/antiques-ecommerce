@@ -15,9 +15,9 @@ class NewsView(APIView):
         responses={200: NewsSerializer()},
         tags=['Home Page'],
     )
-    def get(self, request, id):
+    def get(self, request, news_id):
         try:
-            instance = News.objects.get(id=id)
+            instance = News.objects.get(id=news_id)
         except News.DoesNotExist:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
