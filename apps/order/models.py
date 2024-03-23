@@ -31,8 +31,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orderitems')
+    order = models.ForeignKey(Order, verbose_name='Заказы', on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey(Product, verbose_name='Продукты', on_delete=models.CASCADE, related_name='orderitems')
     
     class Meta:
         verbose_name = 'Позиция заказа'

@@ -12,12 +12,21 @@ from apps.main_page.models import Video, Banner, News
 class VideoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title', 'url']
-    readonly_fields = []
-    fields = ['title', 'url', 'banner']
+    readonly_fields = ['image_preview']
+    fields = ['title', 'url', ('banner', 'image_preview')]
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
         models.URLField: {'widget': TextInput(attrs={'size': '100%'})},
     }
+
+    def image_preview(self, obj):
+        image = obj.banner
+        if image:
+            image_url = image.url
+            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
+        return 'Нет изображения'
+
+    image_preview.short_description = ''
 
 
 @admin.register(Banner)

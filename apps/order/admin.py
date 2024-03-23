@@ -1,22 +1,31 @@
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
+from django.utils.safestring import mark_safe
 
 from .models import Order, OrderItem
 
 
 class OrderProductInline(admin.TabularInline):
     model = OrderItem
-    fields = ['product']
-    readonly_fields = ['product']
+    fields = ['product', 'image_preview']
+    readonly_fields = ['product', 'image_preview']
     show_change_link = True
     can_delete = False
+
+    def image_preview(self, obj):
+        images = obj.product.images.all()
+        if images:
+            url = obj.product.images.first().image.url
+            return mark_safe(f'<a href="{url}" target="_blank"><img src="{url}" height="100px"></a>')
+        return 'Нет изображения'
+
+    image_preview.short_description = ''
 
     def has_add_permission(self, request, obj=None):
         return False
 
 
 @admin.register(Order)
-class OrderAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class OrderAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'total_price', 'status', 'created']
     search_fields = ['id', 'customer_name', 'customer_phone']
     list_filter = ['status', 'created']

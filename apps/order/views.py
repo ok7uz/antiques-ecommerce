@@ -12,7 +12,7 @@ class OrderView(APIView):
 
     @swagger_auto_schema(
         request_body=OrderSerializer(),
-        responses={200: 'Order saved!'},
+        responses={200: 'Order saved!', 400: 'Errors'},
         tags=['Order'],
     )
     def post(self, request):
