@@ -21,15 +21,15 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         ('is_new', 'image_preview'), 'name', 'vendor_code', 'category', 'price', 'description',
         'characteristic', 'size', 'history', 'video_url'
     ]
-    search_fields = ['name', 'description', 'category__name', 'characteristic']
+    search_fields = ['name', 'description', 'category__name', 'characteristic', 'history']
     list_filter = ['is_new', ProductCategoryFilter, ProductSubCategoryFilter]
     readonly_fields = ['image_preview']
     inlines = [ImagesInline]
     filter_horizontal = ('category',)
-
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 10, 'cols': '100%'})},
         models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
+        models.URLField: {'widget': TextInput(attrs={'size': '100%'})},
     }
 
     def image_preview(self, obj):
@@ -46,18 +46,23 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'is_top', 'is_left']
     fields = ['name', 'is_top', 'is_left',]
-    readonly_fields = []
     search_fields = ['name']
     list_filter = [CategoryDirectionFilter]
     inlines = [SubCategoryInline]
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
+    }
 
 
 @admin.register(SubCategory)
 class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'parent']
     fields = ['name', 'parent']
-    search_fields = ['name', 'parent__name', 'parent__parent__name']
+    search_fields = ['name', 'parent__name']
     list_filter = [CategoryFilter]
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
+    }
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'parent':

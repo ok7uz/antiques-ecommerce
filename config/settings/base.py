@@ -11,7 +11,7 @@ DEBUG = True
 # Quick-start development settings - can be overridden in local.py or production.py
 
 # SECURITY WARNING: Update this before deploying in production!
-SECRET_KEY = '1hmdp!148l6!8d63p-&(5w*@*1(nwfmdhq8k__a_4fln^hatuh'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: Don't run with debug turned on in production!
 # This can be overridden in local.py
@@ -137,13 +137,19 @@ CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.j
 CKEDITOR_CONFIGS = {
     'default':
         {
-            'toolbar': 'full',
+            'toolbar': 'Custom',
+            'toolbar_Custom': [
+                ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+                ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote'],
+                ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl'],
+                ['Link', 'Unlink'],
+                ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                ['TextColor', 'BGColor', 'Format', 'FontSize', 'RemoveFormat', 'Source'],
+            ],
             'width': 'auto',
             'height': '400px',
             'versionCheck': False,
-            'extraPlugins': ','.join([
-                'codesnippet',
-            ]),
+            'extraPlugins': ','.join(['codesnippet', 'autolink']),
         },
 }
 
