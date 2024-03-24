@@ -4,12 +4,12 @@ from apps.product.managers import SubCategoryManager, CategoryManager, NewProduc
 
 
 class BaseCategory(models.Model):
-    name = models.CharField('Название', max_length=128)
+    name = models.CharField('Название', max_length=128, db_index=True)
     parent = models.ForeignKey('self', verbose_name='Высшая категория', on_delete=models.CASCADE,
-                               related_name='sub_categories', null=True)
+                               related_name='sub_categories', null=True, db_index=True)
     image = models.ImageField('Изображение', upload_to='category/', null=True)
-    is_top = models.BooleanField('Верхнее меню?', default=False)
-    is_left = models.BooleanField('Левое меню?', default=False)
+    is_top = models.BooleanField('Верхнее меню?', default=False, db_index=True)
+    is_left = models.BooleanField('Левое меню?', default=False, db_index=True)
 
     objects = models.Manager()
 
@@ -50,17 +50,17 @@ class SubCategory(BaseCategory):
 
 
 class Product(models.Model):
-    name = models.CharField('Название продукта', max_length=255, unique=False,)
+    name = models.CharField('Название продукта', max_length=255, unique=False, db_index=True)
     category = models.ManyToManyField(BaseCategory, verbose_name='Категории', related_name='products')
     description = models.TextField('Описание')
 
     price = models.PositiveIntegerField('Цена',)
-    is_new = models.BooleanField('Новый?', default=False)
+    is_new = models.BooleanField('Новый?', default=False, db_index=True)
     created = models.DateField('Дата создания', auto_now_add=True)
-    vendor_code = models.CharField('Артикул', max_length=32)
-    history = models.CharField('История', max_length=255)
-    characteristic = models.CharField('Характеристики', max_length=255)
-    size = models.CharField('Размер', max_length=255)
+    vendor_code = models.CharField('Артикул', max_length=32, db_index=True)
+    history = models.CharField('История', max_length=255, db_index=True)
+    characteristic = models.CharField('Характеристики', max_length=255, db_index=True)
+    size = models.CharField('Размер', max_length=255, db_index=True)
     video_url = models.URLField('Ссылка на видео о продукте на YouTube', blank=True, null=True)
 
     objects = models.Manager()
