@@ -30,7 +30,7 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
     path('products/', include('apps.product.urls')),
-    path('orders/', include('apps.order.urls')),
+    path('order/', include('apps.order.urls')),
     path('', include('apps.main_page.urls')),
 ]
 
