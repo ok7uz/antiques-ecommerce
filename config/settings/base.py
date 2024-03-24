@@ -69,6 +69,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+APPEND_SLASH = True
 
 
 # Database (likely defined differently in local.py and production.py)

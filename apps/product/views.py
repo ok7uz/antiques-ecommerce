@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from drf_yasg import openapi
+from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.response import Response
@@ -20,23 +21,32 @@ class ProductListView(APIView):
         'sidebar_id', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, description='sidebar (sub)category id')
     page_param = openapi.Parameter(
         'page', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, description='page number')
+    search_param = openapi.Parameter(
+        'search', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='searching')
 
     def get_queryset(self):
         queryset = Product.objects.all()
         data = self.request.query_params
         category_id = data.get('category_id', None)
         sidebar_id = data.get('sidebar_id', None)
+        search = data.get('search', None)
 
         if category_id:
             queryset = queryset.filter(category__id=category_id)
-
         if sidebar_id:
             queryset = queryset.filter(category__id=sidebar_id)
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) | Q(category__name__icontains=search) |
+                Q(category__parent__name__icontains=search) | Q(description__icontains=search) |
+                Q(vendor_code__icontains=search) | Q(history__icontains=search) |
+                Q(characteristic__icontains=search) | Q(size__icontains=search)
+            )
 
         return queryset
 
     @swagger_auto_schema(
-        manual_parameters=[category_id_param, sidebar_id_param, page_param],
+        manual_parameters=[category_id_param, sidebar_id_param, page_param, search_param],
         responses={200: ProductListSerializer(many=True)},
         pagination_class=PageNumberPagination,
         tags=['Product'],
