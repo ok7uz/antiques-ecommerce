@@ -36,13 +36,18 @@ class ProductListView(APIView):
         if sidebar_id:
             queryset = queryset.filter(category__id=sidebar_id)
         if search:
-            queryset = queryset.filter(
-                Q(name__icontains=search) | Q(category__name__icontains=search) |
-                Q(category__parent__name__icontains=search) | Q(description__icontains=search) |
-                Q(vendor_code__icontains=search) | Q(history__icontains=search) |
-                Q(characteristic__icontains=search) | Q(size__icontains=search)
-            )
-
+            search_conditions = Q()
+            search_conditions |= Q(name__icontains=search)
+            search_conditions |= Q(category__name__icontains=search)
+            search_conditions |= Q(category__parent__name__icontains=search)
+            search_conditions |= Q(description__icontains=search)
+            search_conditions |= Q(vendor_code__icontains=search)
+            search_conditions |= Q(history__icontains=search)
+            search_conditions |= Q(characteristic__icontains=search)
+            search_conditions |= Q(size__icontains=search)
+            queryset = queryset.filter(search_conditions).distinct()
+        
+        queryset = queryset.prefetch_related('category', 'category__parent')
         return queryset
 
     @swagger_auto_schema(
