@@ -1,6 +1,4 @@
-from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
-from django.shortcuts import get_object_or_404
 
 from apps.order.models import Order
 from apps.product.models import Product

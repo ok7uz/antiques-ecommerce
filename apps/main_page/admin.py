@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.db import models
-from django.forms import Textarea, TextInput
-from django.utils.safestring import mark_safe
+from django.forms import TextInput
 from django.contrib.auth.models import User, Group
+from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin
 
 from apps.main_page.models import Video, Banner, News
@@ -23,7 +23,7 @@ class VideoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         image = obj.banner
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
+            return format_html(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
         return 'Нет изображения'
 
     image_preview.short_description = ''
@@ -43,7 +43,7 @@ class BannerAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         image = obj.image
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="200px"></a>')
+            return format_html(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="200px"></a>')
         return 'Нет изображения'
 
     image_preview.short_description = ''
@@ -64,7 +64,7 @@ class NewsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         image = obj.image
         if image:
             image_url = image.url
-            return mark_safe(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
+            return format_html(f'<a href="{image_url}" target="_blank"><img src="{image_url}" height="100px"></a>')
         return 'Нет изображения'
 
     image_preview.short_description = ''

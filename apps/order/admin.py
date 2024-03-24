@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 
 from .models import Order, OrderItem
 
@@ -15,7 +15,7 @@ class OrderProductInline(admin.TabularInline):
         images = obj.product.images.all()
         if images:
             url = obj.product.images.first().image.url
-            return mark_safe(f'<a href="{url}" target="_blank"><img src="{url}" height="100px"></a>')
+            return format_html(f'<a href="{url}" target="_blank"><img src="{url}" height="100px"></a>')
         return 'Нет изображения'
 
     image_preview.short_description = ''

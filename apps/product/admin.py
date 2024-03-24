@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms import Textarea, TextInput
 from django.db import models
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin
 
 from apps.product.filters import CategoryFilter, CategoryDirectionFilter, ProductCategoryFilter, \
@@ -36,7 +36,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         image_model = obj.images.first()
         if image_model:
             url = image_model.image.url
-            return mark_safe(f'<a href="{url}" target="_blank"><img src="{url}" height="150px"></a>')
+            return format_html(f'<a href="{url}" target="_blank"><img src="{url}" height="150px"></a>')
         return 'Нет изображения'
 
     image_preview.short_description = ''
