@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -16,11 +17,7 @@ class NewsView(APIView):
         tags=['Home Page'],
     )
     def get(self, request, news_id):
-        try:
-            instance = News.objects.get(id=news_id)
-        except News.DoesNotExist:
-            return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
-
+        instance = get_object_or_404(News, id=news_id)
         serializer = NewsSerializer(instance, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 

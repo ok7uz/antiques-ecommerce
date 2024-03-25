@@ -56,7 +56,7 @@ class CategorySerializer(serializers.ModelSerializer):
     @swagger_serializer_method(SubCategorySerializer(many=True))
     def get_sub_categories(self, obj):
         catalog = self.context['catalog']
-        sub_categories = obj.sub_categories.all()
+        sub_categories = obj.sub_categories.select_related('parent').all()
         sub_categories = sub_categories.filter(products__category=catalog).distinct()
         return SubCategorySerializer(sub_categories, many=True).data
 

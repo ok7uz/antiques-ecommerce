@@ -1,24 +1,21 @@
 from django.contrib import admin
-from django.utils.html import format_html
 
+from utils import image_preview
 from .models import Order, OrderItem
 
 
 class OrderProductInline(admin.TabularInline):
     model = OrderItem
-    fields = ['product', 'image_preview']
-    readonly_fields = ['product', 'image_preview']
+    fields = ['product', '_image']
+    readonly_fields = ['product', '_image']
     show_change_link = True
     can_delete = False
 
-    def image_preview(self, obj):
-        images = obj.product.images.all()
-        if images:
-            url = obj.product.images.first().image.url
-            return format_html(f'<a href="{url}" target="_blank"><img src="{url}" height="100px"></a>')
-        return 'Нет изображения'
+    def _image(self, obj):
+        image = obj.banner
+        return image_preview(image, 100)
 
-    image_preview.short_description = ''
+    _image.short_description = ''
 
     def has_add_permission(self, request, obj=None):
         return False

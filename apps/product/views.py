@@ -1,6 +1,6 @@
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
-from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.response import Response
@@ -11,6 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from apps.product.models import Product, Category
 from apps.product.serializers import ProductListSerializer, ProductSerializer, CategoryDetailSerializer
+from utils import get_by_category_id, get_by_sidebar_id, get_by_search
 
 
 class ProductListView(APIView):
@@ -26,28 +27,9 @@ class ProductListView(APIView):
 
     def get_queryset(self):
         queryset = Product.objects.all()
-        data = self.request.query_params
-        category_id = data.get('category_id', None)
-        sidebar_id = data.get('sidebar_id', None)
-        search = data.get('search', None)
-
-        if category_id:
-            queryset = queryset.filter(category__id=category_id)
-        if sidebar_id:
-            queryset = queryset.filter(category__id=sidebar_id)
-        if search:
-            search_conditions = Q()
-            search_conditions |= Q(name__icontains=search)
-            search_conditions |= Q(category__name__icontains=search)
-            search_conditions |= Q(category__parent__name__icontains=search)
-            search_conditions |= Q(description__icontains=search)
-            search_conditions |= Q(vendor_code__icontains=search)
-            search_conditions |= Q(history__icontains=search)
-            search_conditions |= Q(characteristic__icontains=search)
-            search_conditions |= Q(size__icontains=search)
-            queryset = queryset.filter(search_conditions).distinct()
-        
-        queryset = queryset.prefetch_related('category', 'category__parent')
+        queryset = get_by_category_id(self.request, queryset)
+        queryset = get_by_sidebar_id(self.request, queryset)
+        queryset = get_by_search(self.request, queryset)
         return queryset
 
     @swagger_auto_schema(
@@ -73,11 +55,7 @@ class ProductDetailView(APIView):
         tags=['Product'],
     )
     def get(self, request, product_id):
-        try:
-            instance = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
-            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
-
+        instance = get_object_or_404(Product, id=product_id)
         serializer = ProductSerializer(instance, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -104,12 +82,9 @@ class CategoryView(APIView):
     )
     def get(self, request, category_id):
         queryset = Category.objects.filter(is_top=True)
-        try:
-            category = queryset.get(id=category_id)
-            serializer = CategoryDetailSerializer(category, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except queryset.model.DoesNotExist:
-            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+        category = get_object_or_404(queryset, id=category_id)
+        serializer = CategoryDetailSerializer(category, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 def custom404(request, exception=None):
