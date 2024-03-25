@@ -7,7 +7,7 @@ from apps.product.filters import CategoryFilter, CategoryDirectionFilter, Produc
     ProductSubCategoryFilter
 from apps.product.inlines import ImagesInline, SubCategoryInline
 from apps.product.models import Product, SubCategory, Category
-from utils import image_preview
+from config.utils import image_preview
 
 admin.site.site_header = 'Администрация'
 admin.site.site_title = 'Администрация'

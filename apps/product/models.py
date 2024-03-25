@@ -6,8 +6,8 @@ from apps.product.managers import SubCategoryManager, CategoryManager, NewProduc
 class BaseCategory(models.Model):
     name = models.CharField('Название', max_length=128, db_index=True)
     parent = models.ForeignKey('self', verbose_name='Высшая категория', on_delete=models.CASCADE,
-                               related_name='sub_categories', null=True, db_index=True)
-    image = models.ImageField('Изображение', upload_to='category/', null=True)
+                               related_name='sub_categories', null=True, db_index=True, blank=True)
+    image = models.ImageField('Изображение', upload_to='category/', null=True, blank=True)
     is_top = models.BooleanField('Верхнее меню?', default=False, db_index=True)
     is_left = models.BooleanField('Левое меню?', default=False, db_index=True)
 
@@ -50,7 +50,7 @@ class SubCategory(BaseCategory):
 
 
 class Product(models.Model):
-    name = models.CharField('Название продукта', max_length=255, unique=False, db_index=True)
+    name = models.CharField('Название продукта', max_length=255, db_index=True)
     category = models.ManyToManyField(BaseCategory, verbose_name='Категории', related_name='products')
     description = models.TextField('Описание')
 
@@ -80,8 +80,8 @@ def upload_to(instance, filename):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='images')
-    image = models.ImageField(upload_to=upload_to, null=True, blank=True, default=None)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to=upload_to, default=None)
 
     objects = models.Manager()
 

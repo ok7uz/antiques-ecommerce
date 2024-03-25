@@ -5,7 +5,7 @@ from django.contrib.auth.models import User, Group
 from import_export.admin import ImportExportModelAdmin
 
 from apps.main_page.models import Video, Banner, News
-from utils import image_preview
+from config.utils import image_preview
 
 
 @admin.register(Video)

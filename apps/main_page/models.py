@@ -21,7 +21,7 @@ class Banner(models.Model):
 class Video(models.Model):
     title = models.CharField('Название', max_length=255)
     url = models.URLField('Ссылка на YouTube')
-    banner = models.ImageField('Изображение для видео', upload_to='video-banner/', null=False, blank=False)
+    banner = models.ImageField('Изображение для видео', upload_to='video-banner/')
 
     class Meta:
         ordering = ['-id']

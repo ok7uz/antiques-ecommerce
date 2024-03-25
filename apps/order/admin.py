@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from utils import image_preview
+from config.utils import image_preview
 from .models import Order, OrderItem
 
 

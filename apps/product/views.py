@@ -11,7 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from apps.product.models import Product, Category
 from apps.product.serializers import ProductListSerializer, ProductSerializer, CategoryDetailSerializer
-from utils import get_by_category_id, get_by_sidebar_id, get_by_search
+from config.utils import get_by_category_id, get_by_sidebar_id, get_by_search
 
 
 class ProductListView(APIView):

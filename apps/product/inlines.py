@@ -3,7 +3,7 @@ from django.db import models
 from django.forms import TextInput
 
 from apps.product.models import ProductImage, SubCategory
-from utils import image_preview
+from config.utils import image_preview
 
 
 class ImagesInline(admin.TabularInline):

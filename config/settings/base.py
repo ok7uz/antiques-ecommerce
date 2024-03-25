@@ -7,18 +7,23 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-DEBUG = True
-# Quick-start development settings - can be overridden in local.py or production.py
-
-# SECURITY WARNING: Update this before deploying in production!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: Don't run with debug turned on in production!
-# This can be overridden in local.py
 
-ALLOWED_HOSTS = ['*']  # Update allowed hosts in production.py
+LOCAL_APPS = [
+    'apps.product.apps.ProductConfig',
+    'apps.order.apps.OrderConfig',
+    'apps.main_page.apps.MainPageConfig'
+]
 
-# Application definition
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    'drf_yasg',
+    'ckeditor',
+    'corsheaders',
+    'import_export',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,17 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'rest_framework',
-    'drf_yasg',
-    'ckeditor',
-    'corsheaders',
-    'import_export',
-
-    # apps
-    'apps.product',
-    'apps.order',
-    'apps.main_page'
+    *LOCAL_APPS,
+    *THIRD_PARTY_APPS,
 ]
 
 MIDDLEWARE = [
@@ -69,20 +65,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-APPEND_SLASH = True
 
-
-# Database (likely defined differently in local.py and production.py)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-# Password validation
-# (can be left in base.py)
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,9 +81,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# (can be left in base.py)
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
@@ -109,17 +89,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
-# (can be left in base.py)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
@@ -131,7 +106,6 @@ REST_FRAMEWORK = {
     "DATE_INPUT_FORMATS": ["%d-%m-%Y"],
 }
 
-# CKEditor Settings
 CKEDITOR_UPLOAD_PATH = 'news/'
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
@@ -159,9 +133,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8000",
 ]
-
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = True
-X_FRAME_OPTIONS = "SAMEORIGIN"

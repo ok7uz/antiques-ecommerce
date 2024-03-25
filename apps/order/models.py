@@ -6,7 +6,7 @@ from apps.product.models import Product
 class Order(models.Model):
     customer_name = models.CharField('Имя клиента', max_length=255)
     customer_phone = models.CharField('Телефон клиента', max_length=20)
-    customer_email = models.EmailField('Email клиента', blank=True, null=True)
+    customer_email = models.EmailField('Email клиента')
     customer_address = models.TextField('Адрес клиента')
 
     created = models.DateTimeField('Дата создания', auto_now_add=True)
@@ -18,7 +18,7 @@ class Order(models.Model):
         ('cancelled', 'Отменено'),
     ], default='pending')
 
-    items = models.ManyToManyField(Product, through='OrderItem', related_name='orders', blank=False)
+    items = models.ManyToManyField(Product, through='OrderItem', related_name='orders')
     total_price = models.PositiveIntegerField('Сумма заказа')
 
     class Meta:
@@ -27,7 +27,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return f"Заказ #{self.id} - {self.customer_name}"
+        return f'Заказ #{self.id} - {self.customer_name}'
 
 
 class OrderItem(models.Model):
