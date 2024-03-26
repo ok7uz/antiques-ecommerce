@@ -86,6 +86,7 @@ class ProductImage(models.Model):
     objects = models.Manager()
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'product image'
         verbose_name_plural = 'product images'
 

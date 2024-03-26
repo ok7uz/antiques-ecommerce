@@ -81,7 +81,7 @@ class CategoryView(APIView):
         tags=['Category'],
     )
     def get(self, request, category_id):
-        queryset = Category.objects.filter(is_top=True)
+        queryset = Category.objects.filter()
         category = get_object_or_404(queryset, id=category_id)
         serializer = CategoryDetailSerializer(category, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
