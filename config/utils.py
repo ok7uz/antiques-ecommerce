@@ -12,7 +12,7 @@ def image_preview(image, height=100):
 def get_by_category_id(request, queryset):
     category_id = request.query_params.get('category_id', None)
     if category_id:
-        queryset = queryset.filter(category_id=category_id)
+        queryset = queryset.filter(category__id=category_id)
         return queryset
     return queryset
 
@@ -20,7 +20,7 @@ def get_by_category_id(request, queryset):
 def get_by_sidebar_id(request, queryset):
     sidebar_id = request.query_params.get('sidebar_id', None)
     if sidebar_id:
-        queryset = queryset.filter(category_id=sidebar_id)
+        queryset = queryset.filter(category__id=sidebar_id)
         return queryset
     return queryset
 
