@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
@@ -81,7 +82,9 @@ class CategoryView(APIView):
         tags=['Category'],
     )
     def get(self, request, category_id):
-        queryset = BaseCategory.objects.all()
+        queryset = BaseCategory.objects.filter(
+            Q(is_top=True) | Q(parent__is_top=True)
+        )
         category = get_object_or_404(queryset, id=category_id)
         serializer = CategoryDetailSerializer(category, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
