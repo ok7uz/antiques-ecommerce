@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
-from apps.product.models import Product, Category
+from apps.product.models import Product, BaseCategory
 from apps.product.serializers import ProductListSerializer, ProductSerializer, CategoryDetailSerializer
 from config.utils import get_by_category_id, get_by_sidebar_id, get_by_search
 
@@ -81,7 +81,7 @@ class CategoryView(APIView):
         tags=['Category'],
     )
     def get(self, request, category_id):
-        queryset = Category.objects.filter()
+        queryset = BaseCategory.objects.all()
         category = get_object_or_404(queryset, id=category_id)
         serializer = CategoryDetailSerializer(category, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
