@@ -16,8 +16,8 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'name', 'price', 'vendor_code', 'history', 'characteristic',
-            'size', 'images', 'video_url', 'description'
+            'id', 'name', 'price', 'vendor_code', 'history',
+            'characteristic', 'size', 'images', 'video_url', 'description'
         ]
 
     @swagger_serializer_method(serializers.ListField(child=serializers.URLField()))
