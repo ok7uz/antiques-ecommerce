@@ -4,7 +4,6 @@ from apps.order.models import Order
 from apps.product.models import Product
 
 
-
 class OrderSerializer(serializers.ModelSerializer):
     products = serializers.ListField(
         child=serializers.IntegerField(label='id', help_text='Product ID'),
@@ -34,7 +33,7 @@ class OrderSerializer(serializers.ModelSerializer):
         for product_id in products:
             try:
                 product = Product.objects.get(id=product_id)
-                order.items.add(product)
+                order.items.add(product, through_defaults={'product_id': product_id})
             except Product.DoesNotExist:
                 order.delete()
                 raise serializers.ValidationError({'error': f'Product #{product_id} not found'})
