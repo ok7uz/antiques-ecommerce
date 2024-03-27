@@ -8,19 +8,13 @@ class CategoryFilter(admin.SimpleListFilter):
     parameter_name = 'category_id'
 
     def lookups(self, request, model_admin):
-        print(model_admin)
-        queryset = Category.objects.all()
+        queryset = Category.objects.filter(subcategories__isnull=False).distinct()
         return queryset.values_list('id', 'name')
 
     def queryset(self, request, queryset):
         category_id = self.value()
-        if self.value() is not None:
-            try:
-                queryset = queryset.filter(parent__id=category_id)
-                return queryset
-            except queryset.model.DoesNotExist:
-                return None
-
+        if category_id is not None:
+            queryset = queryset.filter(parent__id=category_id)
         return queryset
 
 
@@ -29,40 +23,31 @@ class ProductCategoryFilter(admin.SimpleListFilter):
     parameter_name = 'category_id'
 
     def lookups(self, request, model_admin):
-        print(model_admin)
         queryset = Category.objects.filter(is_top=True)
         return queryset.values_list('id', 'name')
 
     def queryset(self, request, queryset):
         category_id = self.value()
-        if self.value() is not None:
-            try:
-                queryset = queryset.filter(category__id=category_id)
-                return queryset
-            except queryset.model.DoesNotExist:
-                return None
-
+        if category_id is not None:
+            queryset = queryset.filter(categories__id=category_id)
         return queryset
 
 
-class ProductSubCategoryFilter(admin.SimpleListFilter):
-    title = 'Подкатегории'
-    parameter_name = 'subcategory_id'
+class SidebarFilter(admin.SimpleListFilter):
+    title = 'Категории левого меню'
+    parameter_name = 'sidebar_id'
 
     def lookups(self, request, model_admin):
-        print(model_admin)
-        queryset = SubCategory.objects.all()
+        category_id = request.GET.get('category_id', None)
+        queryset = SubCategory.objects.filter(parent__is_left=True)
+        if category_id:
+            queryset = queryset.filter(products__categories=category_id).distinct()
         return queryset.values_list('id', 'name')
 
     def queryset(self, request, queryset):
-        subcategory_id = self.value()
-        if self.value() is not None:
-            try:
-                queryset = queryset.filter(category__id=subcategory_id)
-                return queryset
-            except queryset.model.DoesNotExist:
-                return None
-
+        sidebar_id = self.value()
+        if sidebar_id is not None:
+            queryset = queryset.filter(categories__id=sidebar_id)
         return queryset
 
 
@@ -76,16 +61,7 @@ class CategoryDirectionFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         direction = self.value()
         if direction == 'top':
-            try:
-                queryset = queryset.filter(is_top=True)
-                return queryset
-            except queryset.model.DoesNotExist:
-                return None
+            queryset = queryset.filter(is_top=True)
         elif direction == 'left':
-            try:
-                queryset = queryset.filter(is_left=True)
-                return queryset
-            except queryset.model.DoesNotExist:
-                return None
-
+            queryset = queryset.filter(is_left=True)
         return queryset

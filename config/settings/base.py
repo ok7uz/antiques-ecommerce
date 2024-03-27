@@ -103,7 +103,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    "DATE_INPUT_FORMATS": ["%d-%m-%Y"],
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
 }
 
 CKEDITOR_UPLOAD_PATH = 'news/'

@@ -6,7 +6,7 @@ from apps.product.managers import SubCategoryManager, CategoryManager, NewProduc
 class BaseCategory(models.Model):
     name = models.CharField('Название', max_length=128, db_index=True)
     parent = models.ForeignKey('self', verbose_name='Высшая категория', on_delete=models.CASCADE,
-                               related_name='sub_categories', null=True, db_index=True, blank=True)
+                               related_name='subcategories', null=True, db_index=True, blank=True)
     image = models.ImageField('Изображение', upload_to='category/', null=True, blank=True)
     is_top = models.BooleanField('Верхнее меню?', default=False, db_index=True)
     is_left = models.BooleanField('Левое меню?', default=False, db_index=True)
@@ -44,7 +44,7 @@ class SubCategory(BaseCategory):
 
     class Meta:
         proxy = True
-        ordering = ['-parent__is_top', '-parent', 'name']
+        ordering = ['-parent__is_top', 'parent__name', 'name']
         verbose_name = 'Подкатегория'
         verbose_name_plural = 'Подкатегории'
 

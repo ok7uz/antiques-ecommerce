@@ -4,7 +4,7 @@ from django.db import models
 from import_export.admin import ImportExportModelAdmin
 
 from apps.product.filters import CategoryFilter, CategoryDirectionFilter, ProductCategoryFilter, \
-    ProductSubCategoryFilter
+    SidebarFilter
 from apps.product.inlines import ImagesInline, SubCategoryInline
 from apps.product.models import Product, SubCategory, Category
 from config.utils import image_preview
@@ -22,7 +22,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         'characteristic', 'size', 'history', 'video_url'
     ]
     search_fields = ['name', 'description', 'categories__name', 'characteristic', 'history']
-    list_filter = ['is_new', ProductCategoryFilter, ProductSubCategoryFilter]
+    list_filter = ['is_new', ProductCategoryFilter, SidebarFilter]
     readonly_fields = ['_image']
     inlines = [ImagesInline]
     filter_horizontal = ['categories']
