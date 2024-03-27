@@ -39,12 +39,13 @@ class ProductListView(APIView):
         tags=['Product'],
     )
     def get(self, request):
-        pagination = PageNumberPagination()
-        pagination.page_size = 9
+        # pagination = PageNumberPagination()
+        # pagination.page_size = 9
         queryset = self.get_queryset()
-        page = pagination.paginate_queryset(queryset, request)
-        serializer = ProductListSerializer(page, many=True, context={'request': request})
-        return pagination.get_paginated_response(serializer.data)
+        # page = pagination.paginate_queryset(queryset, request)
+        serializer = ProductListSerializer(queryset, many=True, context={'request': request})
+        # return pagination.get_paginated_response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ProductDetailView(APIView):
