@@ -2,6 +2,7 @@ import uuid
 
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from django.utils.text import slugify
 
 
 class Banner(models.Model):
@@ -33,9 +34,10 @@ class Video(models.Model):
 
 
 class News(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField('Название', max_length=255)
     content = RichTextUploadingField('Контент')
+    slug = models.SlugField(max_length=255, blank=True)
     image = models.ImageField('Изображение', upload_to='news/')
     date = models.DateField('Дата создания', auto_now_add=True)
 
@@ -43,6 +45,11 @@ class News(models.Model):
         ordering = ['-date']
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

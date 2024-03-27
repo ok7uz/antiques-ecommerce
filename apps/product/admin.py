@@ -18,14 +18,14 @@ admin.site.index_title = 'Добро пожаловать в администр�
 class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'vendor_code', 'is_new', 'price')
     fields = [
-        ('is_new', '_image'), 'name', 'vendor_code', 'category', 'price', 'description',
+        ('is_new', '_image'), 'name', 'vendor_code', 'categories', 'price', 'description',
         'characteristic', 'size', 'history', 'video_url'
     ]
-    search_fields = ['name', 'description', 'category__name', 'characteristic', 'history']
+    search_fields = ['name', 'description', 'categories__name', 'characteristic', 'history']
     list_filter = ['is_new', ProductCategoryFilter, ProductSubCategoryFilter]
     readonly_fields = ['_image']
     inlines = [ImagesInline]
-    filter_horizontal = ['category']
+    filter_horizontal = ['categories']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 10, 'cols': '100%'})},
         models.CharField: {'widget': TextInput(attrs={'size': '100%'})},

@@ -16,8 +16,8 @@ class NewsView(APIView):
         responses={200: NewsSerializer()},
         tags=['Home Page'],
     )
-    def get(self, request, news_id):
-        instance = get_object_or_404(News, id=news_id)
+    def get(self, request, slug):
+        instance = get_object_or_404(News, slug=slug)
         serializer = NewsSerializer(instance, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 

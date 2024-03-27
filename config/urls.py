@@ -6,7 +6,6 @@ from rest_framework import permissions
 from django.conf import settings
 from django.conf.urls.static import static
 
-from apps.product.views import custom404
 
 schema_view: get_schema_view = get_schema_view(
     openapi.Info(
@@ -29,13 +28,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
-    path('products/', include('apps.product.urls')),
     path('order/', include('apps.order.urls')),
+    path('', include('apps.product.urls')),
     path('', include('apps.main_page.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-handler404 = custom404

@@ -1,5 +1,4 @@
 from django.db.models import Q
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -10,8 +9,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
-from apps.product.models import Product, BaseCategory
-from apps.product.serializers import ProductListSerializer, ProductSerializer, CategoryDetailSerializer
+from apps.product.models import Product, BaseCategory, Category
+from apps.product.serializers import ProductListSerializer, ProductSerializer, SidebarSerializer, CategorySerializer
 from config.utils import get_by_category_id, get_by_sidebar_id, get_by_search
 
 
@@ -78,7 +77,21 @@ class CategoryView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
-        responses={200: CategoryDetailSerializer()},
+        responses={200: CategorySerializer()},
+        tags=['Category'],
+    )
+    def get(self, request, category_id):
+        queryset = Category.objects.filter(is_top=True)
+        category = get_object_or_404(queryset, id=category_id)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class SidebarView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: SidebarSerializer()},
         tags=['Category'],
     )
     def get(self, request, category_id):
@@ -86,12 +99,5 @@ class CategoryView(APIView):
             Q(is_top=True) | Q(parent__is_top=True)
         )
         category = get_object_or_404(queryset, id=category_id)
-        serializer = CategoryDetailSerializer(category, context={'request': request})
+        serializer = SidebarSerializer(category)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-def custom404(request, exception=None):
-    return JsonResponse({
-        'status_code': 404,
-        'error': 'Not found'
-    })

@@ -51,9 +51,11 @@ class SubCategory(BaseCategory):
 
 class Product(models.Model):
     name = models.CharField('Название продукта', max_length=255, db_index=True)
-    category = models.ManyToManyField(BaseCategory, verbose_name='Категории', related_name='products')
+    categories = models.ManyToManyField(
+        BaseCategory, verbose_name='Категории', related_name='products',
+        db_table='product_product_category'
+    )
     description = models.TextField('Описание')
-
     price = models.PositiveIntegerField('Цена',)
     is_new = models.BooleanField('Новый?', default=False, db_index=True)
     created = models.DateField('Дата создания', auto_now_add=True)
