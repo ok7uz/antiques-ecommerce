@@ -17,7 +17,7 @@
                 "https://..."
             ]
         },
-        ...
+        "... other results"
     ]
 }
 ```
@@ -35,7 +35,7 @@
         "https://..."
     ],
     "video_url": "https://...",
-    "description': "..."
+    "description": "..."
 }
 ```
 * New Products - `new-products/`
@@ -50,7 +50,7 @@
             "https://..."
         ]
     },
-    ...
+    "... other results"
 ]
 ```
 * Category Detail - `category/<category_id>/`
@@ -63,7 +63,7 @@
             "id": 10,
             "name": "..."
         },
-        ...
+        "... other results"
     ]
 }
 ```
@@ -79,10 +79,10 @@
                     "id": 10,
                     "name": "..."
                 },
-                ...
+                "... other results"
             ]
         },
-        ...
+        "... other results"
     ]
 }
 ```
@@ -98,7 +98,7 @@
         "title": "...",
         "content": "..."
     },
-    ...
+    "... other results"
 ]
 ```
 * News Detail - `news/<news_id>/`
@@ -119,7 +119,7 @@
         "subtitle": "...",
         "image": "https://..."
     },
-    ...
+    "... other results"
 ]
 ```
 * Videos List - `videos/`
@@ -130,7 +130,7 @@
         "url": "https://www.youtube.com/...",
         "banner": "https://..."
     },
-    ...
+    "... other results"
 ]
 ```
 
