@@ -33,11 +33,10 @@ class OrderSerializer(serializers.ModelSerializer):
         for product_id in products:
             try:
                 product = Product.objects.get(id=product_id)
-                order.items.add(product, through_defaults={'product_id': product_id})
+                order.items.add(product)
             except Product.DoesNotExist:
                 order.delete()
                 raise serializers.ValidationError({'error': f'Product #{product_id} not found'})
-
         return order
 
 

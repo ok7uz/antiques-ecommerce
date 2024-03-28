@@ -56,7 +56,7 @@ class Product(models.Model):
         db_table='product_product_category'
     )
     description = models.TextField('Описание')
-    price = models.PositiveIntegerField('Цена',)
+    price = models.PositiveIntegerField('Цена')
     is_new = models.BooleanField('Новый?', default=False, db_index=True)
     created = models.DateField('Дата создания', auto_now_add=True)
     vendor_code = models.CharField('Артикул', max_length=32, db_index=True)

@@ -6,16 +6,20 @@ from .models import Order, OrderItem, Callback
 
 class OrderProductInline(admin.TabularInline):
     model = OrderItem
-    fields = ['product', '_image']
-    readonly_fields = ['product', '_image']
+    fields = ['_image', 'product', '_price']
+    readonly_fields = ['product', '_image', '_price']
     show_change_link = True
     can_delete = False
 
     def _image(self, obj):
-        image = obj.banner
+        image = obj.product.images.first().image
         return image_preview(image, 100)
 
+    def _price(self, obj):
+        return obj.product.price
+
     _image.short_description = ''
+    _price.short_description = 'Цена'
 
     def has_add_permission(self, request, obj=None):
         return False
