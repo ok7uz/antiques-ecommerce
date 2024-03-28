@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.order.models import Order
+from apps.order.models import Order, Callback
 from apps.product.models import Product
 
 
@@ -39,3 +39,9 @@ class OrderSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'error': f'Product #{product_id} not found'})
 
         return order
+
+
+class CallbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Callback
+        fields = ['applicant_name', 'applicant_email']

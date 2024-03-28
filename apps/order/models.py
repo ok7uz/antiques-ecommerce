@@ -40,3 +40,17 @@ class OrderItem(models.Model):
         
     def __str__(self):
         return f"{self.product.name} для Заказа #{self.order.id}"
+
+
+class Callback(models.Model):
+    applicant_name = models.CharField('Имя заявителя', max_length=255)
+    applicant_email = models.EmailField('Электронная почта заявителя')
+    created = models.DateField('Дата создания', auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
+        verbose_name = 'Обратная связь'
+        verbose_name_plural = 'Обратная связи'
+
+    def __str__(self):
+        return self.applicant_name

@@ -14,7 +14,7 @@ class NewsView(APIView):
 
     @swagger_auto_schema(
         responses={200: NewsSerializer()},
-        tags=['Home Page'],
+        tags=['Main Page'],
     )
     def get(self, request, news_id):
         instance = get_object_or_404(News, id=news_id)
@@ -27,7 +27,7 @@ class NewsListView(APIView):
 
     @swagger_auto_schema(
         responses={200: NewsListSerializer(many=True)},
-        tags=['Home Page'],
+        tags=['Main Page'],
     )
     def get(self, request):
         queryset = News.objects.all()
@@ -40,7 +40,7 @@ class BannerListView(APIView):
 
     @swagger_auto_schema(
         responses={200: BannerSerializer(many=True)},
-        tags=['Home Page'],
+        tags=['Main Page'],
     )
     def get(self, request):
         queryset = Banner.objects.all()
@@ -48,12 +48,12 @@ class BannerListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class VideoSerializerListView(APIView):
+class VideoListView(APIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(
         responses={200: VideoSerializer(many=True)},
-        tags=['Home Page'],
+        tags=['Main Page'],
     )
     def get(self, request):
         queryset = Video.objects.all()

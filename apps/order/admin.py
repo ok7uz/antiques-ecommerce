@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from config.utils import image_preview
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Callback
 
 
 class OrderProductInline(admin.TabularInline):
@@ -30,6 +30,18 @@ class OrderAdmin(admin.ModelAdmin):
     fields = ['customer_name', 'customer_phone', 'customer_email', 'customer_address', 'total_price', 'status']
     readonly_fields = ['customer_name', 'customer_phone', 'customer_email', 'customer_address', 'total_price']
     inlines = [OrderProductInline]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Callback)
+class CallbackAdmin(admin.ModelAdmin):
+    list_display = ['applicant_name', 'applicant_email', 'created']
+    readonly_fields = ['applicant_name', 'applicant_email']
+    search_fields = ['applicant_name', 'applicant_email']
+    list_filter = ['created']
+    fields = ['applicant_name', 'applicant_email']
 
     def has_add_permission(self, request, obj=None):
         return False

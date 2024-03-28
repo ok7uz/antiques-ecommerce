@@ -1,7 +1,7 @@
 # AntikDecor
 
 ## Product
-* Product List - `products/?category_id={}&sidebar_id={}&search={}&page={}`
+* Product List `GET` `=>` `products/?category_id={}&sidebar_id={}&search={}&page={}`
 ```json
 {
     "count": 100,
@@ -21,7 +21,7 @@
     ]
 }
 ```
-* Product Detail - `product/<product_id>/`
+* Product Detail `GET` `=>` `product/<product_id>/`
 ```json
 {
     "id": 2595,
@@ -38,7 +38,7 @@
     "description": "..."
 }
 ```
-* New Products - `new-products/`
+* New Products `GET` `=>` `new-products/`
 ```json
 [
     {
@@ -53,7 +53,7 @@
     "... other results"
 ]
 ```
-* Category Detail - `category/<category_id>/`
+* Category Detail `GET` `=>` `category/<category_id>/`
 ```json
 {
     "id": 1,
@@ -67,7 +67,7 @@
     ]
 }
 ```
-* Category Sidebar - `category/<category_id>/sidebar/`
+* Category Sidebar `GET` `=>` `category/<category_id>/sidebar/`
 ```json
 {
     "data": [
@@ -88,7 +88,7 @@
 ```
 
 ## Main Page
-* News List - `news/`
+* News List `GET` `=>` `news/`
 ```json
 [
     {
@@ -101,7 +101,7 @@
     "... other results"
 ]
 ```
-* News Detail - `news/<news_id>/`
+* News Detail `GET` `=>` `news/<news_id>/`
 ```json
 {
     "id": "efa06612-cc9e-455a-9430-2c258b448df4", 
@@ -111,7 +111,7 @@
     "content": "..."
 }
 ```
-* Banner List - `banners/`
+* Banner List `GET` `=>` `banners/`
 ```json
 [
     {
@@ -122,7 +122,7 @@
     "... other results"
 ]
 ```
-* Videos List - `videos/`
+* Videos List `GET` `=>` `videos/`
 ```json
 [
     {
@@ -135,4 +135,43 @@
 ```
 
 ## Order
-* Uncompleted
+* Order `POST` `=>` `order/`
+
+request
+```json
+{
+  "customer_name": "...",
+  "customer_phone": "...",
+  "customer_email": "...@...com",
+  "customer_address": "...",
+  "total_price": 100000,
+  "products": [
+    1001, 1002, "..."
+  ]
+}
+```
+response
+```json
+{
+    "success": true,
+    "message": "Order saved!"
+}
+```
+
+*  `POST` `=>` `callback/`
+
+request
+```json
+{
+  "applicant_name": "...",
+  "applicant_email": "...@gmail.com"
+}
+```
+response
+```json
+{
+    "success": true,
+    "message": "Callback data saved!"
+}
+```
+
