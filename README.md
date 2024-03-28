@@ -87,7 +87,7 @@
 }
 ```
 
-## Home Page
+## Main Page
 * News List - `news/`
 ```json
 [
