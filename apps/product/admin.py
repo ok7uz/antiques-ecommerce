@@ -61,11 +61,14 @@ class SoldProductAdmin(ProductAdmin):
 
     _order.short_description = 'Заказ'
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(Category)
 class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'is_top', 'is_left']
-    fields = ['name', 'is_top', 'is_left',]
+    fields = ['name', 'is_top', 'is_left']
     search_fields = ['name']
     list_filter = [CategoryDirectionFilter]
     inlines = [SubCategoryInline]
