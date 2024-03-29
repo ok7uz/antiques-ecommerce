@@ -1,6 +1,7 @@
 from django.db import models
 
-from apps.product.managers import SubCategoryManager, CategoryManager, NewProductsManager
+from apps.product.managers import SubCategoryManager, CategoryManager, NewProductsManager, SoldProductsManager, \
+    ProductManager
 
 
 class BaseCategory(models.Model):
@@ -57,7 +58,10 @@ class Product(models.Model):
     )
     description = models.TextField('Описание')
     price = models.PositiveIntegerField('Цена')
+
     is_new = models.BooleanField('Новый?', default=False, db_index=True)
+    is_sold = models.BooleanField('Продано?', default=False, db_index=True)
+
     created = models.DateField('Дата создания', auto_now_add=True)
     vendor_code = models.CharField('Артикул', max_length=32, db_index=True)
     history = models.CharField('История', max_length=255, db_index=True)
@@ -65,7 +69,7 @@ class Product(models.Model):
     size = models.CharField('Размер', max_length=255, db_index=True)
     video_url = models.URLField('Ссылка на видео о продукте на YouTube', blank=True, null=True)
 
-    objects = models.Manager()
+    objects = ProductManager()
     new_products = NewProductsManager()
 
     class Meta:
@@ -75,6 +79,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SoldProduct(Product):
+    objects = SoldProductsManager()
+
+    class Meta:
+        proxy = True
+        ordering = ['-is_new', 'name']
+        verbose_name = 'Проданный продукт'
+        verbose_name_plural = 'Проданная продукция'
 
 
 def upload_to(instance, filename):
