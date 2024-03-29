@@ -37,7 +37,11 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def _image(self, obj):
         image = obj.images.first().image
-        return image_preview(image, 150)
+        width = image.width
+        height = image.height
+        if height > width:
+            return image_preview(image, height=200)
+        return image_preview(image, width=200)
 
     _image.short_description = ''
 
@@ -54,7 +58,6 @@ class SoldProductAdmin(ProductAdmin):
     def _order(self, obj):
         order = Order.objects.filter(items=obj).first()
         if order:
-            print(Order._meta.app_label)
             url = reverse("admin:%s_%s_change" % (Order._meta.app_label, Order._meta.model_name), args=[order.id])
             return format_html(f'<a href="{url}">{order.__str__()}</a>')
         return 'Не найдено'

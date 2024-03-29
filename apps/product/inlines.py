@@ -15,7 +15,7 @@ class ImagesInline(admin.TabularInline):
 
     def _image(self, obj):
         image = obj.image
-        return image_preview(image, 100)
+        return image_preview(image, height=100, width=100)
 
     _image.short_description = ''
 

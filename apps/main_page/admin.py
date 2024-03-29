@@ -21,7 +21,7 @@ class VideoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def _image(self, obj):
         image = obj.banner
-        return image_preview(image, 150)
+        return image_preview(image, height=150, width=100)
 
     _image.short_description = ''
 
@@ -38,7 +38,7 @@ class BannerAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def _image(self, obj):
         image = obj.image
-        return image_preview(image, 200)
+        return image_preview(image, height=180, width=300)
 
     _image.short_description = ''
 
@@ -56,7 +56,7 @@ class NewsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def _image(self, obj):
         image = obj.image
-        return image_preview(image, 150)
+        return image_preview(image, height=150, width=200)
 
     _image.short_description = ''
 

@@ -13,7 +13,7 @@ class OrderProductInline(admin.TabularInline):
 
     def _image(self, obj):
         image = obj.product.images.first().image
-        return image_preview(image, 100)
+        return image_preview(image, height=120, width=120)
 
     def _price(self, obj):
         return obj.product.price
