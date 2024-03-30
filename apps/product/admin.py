@@ -94,8 +94,3 @@ class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         if db_field.name == 'parent':
             kwargs['queryset'] = Category.objects.all()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-@admin.register(ProductImage)
-class ProductImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    pass
