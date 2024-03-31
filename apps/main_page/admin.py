@@ -21,7 +21,7 @@ class VideoAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def _image(self, obj):
         image = obj.banner
-        return image_preview(image, height=150, width=100)
+        return image_preview(image, height=200, width=150)
 
     _image.short_description = ''
 
