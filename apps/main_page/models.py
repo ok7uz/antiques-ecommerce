@@ -22,6 +22,7 @@ class Video(models.Model):
     title = models.CharField('Название', max_length=255)
     url = models.URLField('Ссылка на YouTube')
     banner = models.ImageField('Изображение для видео', upload_to='video-banner/')
+    type = models.CharField(max_length=10, choices=(('main', 'основные'), ('event', 'мероприятие')))
 
     class Meta:
         ordering = ['-id']
@@ -46,3 +47,17 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Expert(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Имя и фамилия эксперта')
+    about = models.TextField(verbose_name='Об эксперте')
+    image = models.ImageField(upload_to='experts/', verbose_name='Фотография эксперта')
+
+    class Meta:
+        verbose_name = 'Эксперт'
+        verbose_name_plural = 'Эксперты'
+
+    def __str__(self):
+        return self.name
+
