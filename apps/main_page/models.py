@@ -1,6 +1,6 @@
 import uuid
 
-from ckeditor_uploader.fields import RichTextUploadingField
+from django_ckeditor_5.fields import CKEditor5Field
 from django.db import models
 
 
@@ -36,7 +36,7 @@ class Video(models.Model):
 class News(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField('Название', max_length=255)
-    content = RichTextUploadingField('Контент')
+    content = CKEditor5Field('Контент', config_name='extends')
     image = models.ImageField('Изображение', upload_to='news/')
     date = models.DateField('Дата создания', auto_now_add=True)
 
