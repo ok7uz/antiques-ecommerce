@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main_page', '0004_alter_video_type'),
+        ('main_page', '0001_initial'),
     ]
 
     operations = [
