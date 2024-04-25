@@ -26,7 +26,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     path('admin/', admin.site.urls),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('ckeditor5/', include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 
     path('', include('apps.order.urls')),
     path('', include('apps.product.urls')),
