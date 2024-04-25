@@ -32,7 +32,7 @@ class BannerAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['title']
     readonly_fields = ['_image']
     search_fields = ['title', 'subtitle']
-    fields = ['title', 'subtitle', ('image', '_image')]
+    fields = ['title', 'subtitle', ('image', '_image'), 'has_button', 'button_url']
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
     }

@@ -21,7 +21,7 @@ class BannerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        fields = ['title', 'subtitle', 'image']
+        fields = ['title', 'subtitle', 'image', 'has_button', 'button_url']
 
 
 class VideoSerializer(serializers.ModelSerializer):

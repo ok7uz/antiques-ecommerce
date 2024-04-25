@@ -8,6 +8,8 @@ class Banner(models.Model):
     title = models.CharField('Заголовок', max_length=255)
     subtitle = models.CharField('Подзаголовок', max_length=255)
     image = models.ImageField('Изображение', upload_to='banner/')
+    has_button = models.BooleanField('Есть кнопка?', default=False)
+    button_url = models.URLField('Ссылка на кнопку', null=True, blank=True)
 
     class Meta:
         ordering = ['-id']
