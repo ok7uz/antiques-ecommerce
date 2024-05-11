@@ -25,6 +25,13 @@ def get_by_sidebar_id(request, queryset):
         return queryset
     return queryset
 
+def get_by_filter_id(request, queryset):
+    filter_id = request.query_params.get('filter_id', None)
+    if filter_id:
+        queryset = queryset.filter(filter__id=filter_id)
+        return queryset
+    return queryset
+
 
 def get_by_search(request, queryset):
     search = request.query_params.get('search', None)
@@ -33,6 +40,7 @@ def get_by_search(request, queryset):
         search_conditions |= Q(name__icontains=search)
         search_conditions |= Q(categories__name__icontains=search)
         search_conditions |= Q(categories__parent__name__icontains=search)
+        search_conditions |= Q(filter__name__icontains=search)
         # search_conditions |= Q(description__icontains=search)
         # search_conditions |= Q(vendor_code__icontains=search)
         # search_conditions |= Q(history__icontains=search)

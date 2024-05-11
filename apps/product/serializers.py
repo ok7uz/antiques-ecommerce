@@ -1,7 +1,7 @@
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
-from apps.product.models import Product, Category
+from apps.product.models import Filter, Product, Category
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -64,3 +64,11 @@ class SidebarSerializer(serializers.Serializer):
         category_id = obj.id
         querysat = Category.objects.filter(is_left=True, products__categories=category_id).distinct().order_by('id')
         return CategorySerializer(querysat, many=True, context={'category_id': category_id}).data
+
+
+class FilterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Filter
+        fields = ('id', 'name')
+    

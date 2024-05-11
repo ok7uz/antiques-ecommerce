@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 from apps.product.managers import SubCategoryManager, CategoryManager, NewProductsManager, SoldProductsManager, \
@@ -108,3 +109,17 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.image.url
+
+
+class Filter(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=128, verbose_name='Название')
+    products = models.ManyToManyField(Product, related_name='filter', verbose_name='Продукты')
+
+    class Meta:
+        db_table = 'product_filter'
+        verbose_name = 'Фильтр'
+        verbose_name_plural = 'Фильтры'
+
+    def __str__(self):
+        return f"Фильтр '{self.name}'"

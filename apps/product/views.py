@@ -9,9 +9,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
-from apps.product.models import Product, BaseCategory, Category
-from apps.product.serializers import ProductListSerializer, ProductSerializer, SidebarSerializer, CategorySerializer
-from config.utils import get_by_category_id, get_by_sidebar_id, get_by_search
+from apps.product.models import Filter, Product, BaseCategory, Category
+from apps.product.serializers import FilterSerializer, ProductListSerializer, ProductSerializer, SidebarSerializer, CategorySerializer
+from config.utils import get_by_category_id, get_by_filter_id, get_by_sidebar_id, get_by_search
 
 
 class ProductListView(APIView):
@@ -24,16 +24,19 @@ class ProductListView(APIView):
         'page', openapi.IN_QUERY, type=openapi.TYPE_INTEGER, description='page number')
     search_param = openapi.Parameter(
         'search', openapi.IN_QUERY, type=openapi.TYPE_STRING, description='searching')
+    filter_param = openapi.Parameter(
+        'filter_id', openapi.IN_QUERY, type=openapi.FORMAT_UUID, description='Filter product with custom filters')
 
     def get_queryset(self):
         queryset = Product.objects.all()
         queryset = get_by_category_id(self.request, queryset)
         queryset = get_by_sidebar_id(self.request, queryset)
         queryset = get_by_search(self.request, queryset)
+        queryset = get_by_filter_id(self.request, queryset)
         return queryset
 
     @swagger_auto_schema(
-        manual_parameters=[category_id_param, sidebar_id_param, page_param, search_param],
+        manual_parameters=[category_id_param, sidebar_id_param, page_param, search_param, filter_param],
         responses={200: ProductListSerializer(many=True)},
         pagination_class=PageNumberPagination,
         tags=['Product'],
@@ -100,4 +103,17 @@ class SidebarView(APIView):
         )
         category = get_object_or_404(queryset, id=category_id)
         serializer = SidebarSerializer(category)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class FilterList(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        responses={200: SidebarSerializer(many=True)},
+        tags=['Product'],
+    )
+    def get(self, request):
+        filters = Filter.objects.all()
+        serializer = FilterSerializer(filters, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

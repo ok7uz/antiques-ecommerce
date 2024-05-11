@@ -9,7 +9,7 @@ from apps.order.models import Order
 from apps.product.filters import CategoryFilter, CategoryDirectionFilter, ProductCategoryFilter, \
     SidebarFilter
 from apps.product.inlines import ImagesInline, SubCategoryInline
-from apps.product.models import Product, SubCategory, Category, SoldProduct, ProductImage
+from apps.product.models import Filter, Product, SubCategory, Category, SoldProduct, ProductImage
 from config.utils import image_preview
 
 admin.site.site_header = 'Администрация'
@@ -94,3 +94,16 @@ class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         if db_field.name == 'parent':
             kwargs['queryset'] = Category.objects.all()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(Filter)
+class FilterAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ('name',)
+    fields = ['name', 'products']
+    search_fields = ['name', 'product__name']
+    filter_horizontal = ['products']
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 10, 'cols': '100%'})},
+        models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
+        models.URLField: {'widget': TextInput(attrs={'size': '100%'})},
+    }
