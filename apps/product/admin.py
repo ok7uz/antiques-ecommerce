@@ -71,7 +71,7 @@ class SoldProductAdmin(ProductAdmin):
 @admin.register(Category)
 class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'is_top', 'is_left']
-    fields = ['name', 'is_top', 'is_left']
+    fields = ['name', 'description', 'is_top', 'is_left']
     search_fields = ['name']
     list_filter = [CategoryDirectionFilter]
     inlines = [SubCategoryInline]
