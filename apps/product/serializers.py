@@ -45,7 +45,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'subcategories']
+        fields = ['id', 'name', 'description', 'subcategories']
 
     @swagger_serializer_method(SubCategorySerializer(many=True))
     def get_subcategories(self, obj):
