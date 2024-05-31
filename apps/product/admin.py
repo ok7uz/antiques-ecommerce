@@ -9,7 +9,7 @@ from apps.order.models import Order
 from apps.product.filters import CategoryFilter, CategoryDirectionFilter, ProductCategoryFilter, \
     SidebarFilter
 from apps.product.inlines import ImagesInline, SubCategoryInline
-from apps.product.models import Filter, Product, SubCategory, Category, SoldProduct, ProductImage
+from apps.product.models import Filter, Product, SubCategory, Category, SoldProduct, ProductImage, L3Category
 from config.utils import image_preview
 
 admin.site.site_header = 'Администрация'
@@ -82,6 +82,22 @@ class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 @admin.register(SubCategory)
 class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ['name', 'parent']
+    fields = ['name', 'parent', 'title', 'description']
+    search_fields = ['name', 'parent__name']
+    list_filter = [CategoryFilter]
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '100%'})},
+    }
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'parent':
+            kwargs['queryset'] = Category.objects.all()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(L3Category)
+class L3CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'parent']
     fields = ['name', 'parent', 'title', 'description']
     search_fields = ['name', 'parent__name']

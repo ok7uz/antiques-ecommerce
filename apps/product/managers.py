@@ -23,4 +23,9 @@ class CategoryManager(models.Manager):
 
 class SubCategoryManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(parent__isnull=False)
+        return super().get_queryset().filter(parent__isnull=False, parent__parent=None)
+
+
+class L3CategoryManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(parent__parent__isnull=False)

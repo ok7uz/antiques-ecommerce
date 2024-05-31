@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 
 from apps.product.managers import SubCategoryManager, CategoryManager, NewProductsManager, SoldProductsManager, \
-    ProductManager
+    ProductManager, L3CategoryManager
 
 
 class BaseCategory(models.Model):
@@ -51,6 +51,16 @@ class SubCategory(BaseCategory):
         ordering = ['-parent__is_top', 'parent__name', 'name']
         verbose_name = 'Подкатегория'
         verbose_name_plural = 'Подкатегории'
+
+
+class L3Category(BaseCategory):
+    objects = L3CategoryManager()
+
+    class Meta:
+        proxy = True
+        ordering = ['-parent__is_top', 'parent__name', 'name']
+        verbose_name = 'Подподкатегория'
+        verbose_name_plural = 'Подподкатегории'
 
 
 class Product(models.Model):

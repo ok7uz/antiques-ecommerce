@@ -34,10 +34,21 @@ class ProductListSerializer(ProductSerializer):
         return category.name if category else None
 
 
+class L3CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'title', 'description',]
+
+
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'title', 'description', 'subcategories']
+
+    @swagger_serializer_method(L3CategorySerializer(many=True))
+    def get_subcategories(self, obj):
+        subcategories = obj.subcategories.all()
+        return L3CategorySerializer(subcategories, many=True).data
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -45,7 +56,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'description', 'subcategories']
+        fields = ['id', 'name', 'title', 'description', 'subcategories']
 
     @swagger_serializer_method(SubCategorySerializer(many=True))
     def get_subcategories(self, obj):
