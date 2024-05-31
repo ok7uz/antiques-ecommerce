@@ -108,7 +108,7 @@ class L3CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'parent':
-            kwargs['queryset'] = Category.objects.all()
+            kwargs['queryset'] = SubCategory.objects.all()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
