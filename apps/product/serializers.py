@@ -1,7 +1,7 @@
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
-from apps.product.models import Filter, Product, Category
+from apps.product.models import Filter, Product, Category, SubCategory
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -41,8 +41,10 @@ class L3CategorySerializer(serializers.ModelSerializer):
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
+    subcategories = serializers.SerializerMethodField()
+
     class Meta:
-        model = Category
+        model = SubCategory
         fields = ['id', 'name', 'title', 'description', 'subcategories']
 
     @swagger_serializer_method(L3CategorySerializer(many=True))
