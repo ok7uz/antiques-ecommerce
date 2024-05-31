@@ -71,7 +71,7 @@ class SoldProductAdmin(ProductAdmin):
 @admin.register(Category)
 class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'is_top', 'is_left']
-    fields = ['name', 'description', 'is_top', 'is_left']
+    fields = ['name', 'title', 'description', 'is_top', 'is_left']
     search_fields = ['name']
     list_filter = [CategoryDirectionFilter]
     inlines = [SubCategoryInline]
@@ -83,7 +83,7 @@ class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 @admin.register(SubCategory)
 class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'parent']
-    fields = ['name', 'parent']
+    fields = ['name', 'parent', 'title', 'description']
     search_fields = ['name', 'parent__name']
     list_filter = [CategoryFilter]
     formfield_overrides = {

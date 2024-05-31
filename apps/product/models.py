@@ -7,6 +7,7 @@ from apps.product.managers import SubCategoryManager, CategoryManager, NewProduc
 
 class BaseCategory(models.Model):
     name = models.CharField('Название', max_length=128, db_index=True)
+    title = models.CharField('Заголовок', max_length=256)
     description = models.TextField('Описание')
     parent = models.ForeignKey('self', verbose_name='Высшая категория', on_delete=models.CASCADE,
                                related_name='subcategories', null=True, db_index=True, blank=True)
