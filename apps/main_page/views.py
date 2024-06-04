@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -9,6 +10,7 @@ from rest_framework.views import APIView
 from apps.main_page.models import News, Banner, Video, Expert
 from apps.main_page.serializers import NewsListSerializer, NewsSerializer, BannerSerializer, VideoSerializer, \
     ExpertSerializer
+from config.settings.base import EMAIL_HOST_USER
 
 
 class NewsView(APIView):
@@ -32,6 +34,13 @@ class NewsListView(APIView):
         tags=['Main Page'],
     )
     def get(self, request):
+        send_mail(
+            'Test Subject',
+            'Test message body',
+            EMAIL_HOST_USER,
+            ['komronbekobloev@gmail.com'],
+            fail_silently=False,
+        )
         queryset = News.objects.all()
         serializer = NewsListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
