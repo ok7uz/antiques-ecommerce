@@ -63,7 +63,7 @@ class CategorySerializer(serializers.ModelSerializer):
     @swagger_serializer_method(SubCategorySerializer(many=True))
     def get_subcategories(self, obj):
         category_id = self.context.get('category_id', None)
-        subcategories = obj.subcategories.select_related('parent').all().order_by('id')
+        subcategories = obj.subcategories.select_related('parent').all().order_by('name')
         if category_id:  # get the sidebar subcategories corresponding to the category
             subcategories = subcategories.filter(products__categories=category_id).distinct()
         return SubCategorySerializer(subcategories, many=True, context=self.context).data
