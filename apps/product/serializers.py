@@ -37,7 +37,7 @@ class ProductListSerializer(ProductSerializer):
 class L3CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'title', 'description',]
+        fields = ['id', 'name', 'title', 'description', 'image']
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -58,7 +58,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'title', 'description', 'subcategories']
+        fields = ['id', 'name', 'title', 'image', 'description', 'subcategories']
 
     @swagger_serializer_method(SubCategorySerializer(many=True))
     def get_subcategories(self, obj):
@@ -75,8 +75,8 @@ class SidebarSerializer(serializers.Serializer):
     @swagger_serializer_method(CategorySerializer(many=True))
     def get_data(self, obj):
         category_id = obj.id
-        querysat = Category.objects.filter(is_left=True, products__categories=category_id).distinct().order_by('id')
-        return CategorySerializer(querysat, many=True, context={'category_id': category_id}).data
+        queryset = Category.objects.filter(is_left=True, products__categories=category_id).distinct().order_by('id')
+        return CategorySerializer(queryset, many=True, context={'category_id': category_id}).data
 
 
 class FilterSerializer(serializers.ModelSerializer):
