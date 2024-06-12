@@ -48,13 +48,12 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 @admin.register(SoldProduct)
 class SoldProductAdmin(ProductAdmin):
-    list_display = ('name', 'vendor_code', 'commentary', 'price')
+    list_display = ('name', 'vendor_code', 'commentary')
     fields = [
         ('is_new', '_image'), 'name', 'commentary', 'vendor_code', 'categories', 'price', 'description',
         'characteristic', 'size', 'history', 'video_url', 'is_sold', '_order'
     ]
-    readonly_fields = ['_image', 'name', 'vendor_code', 'categories', 'price', 'description', 'characteristic', 'size',
-                       'history', 'video_url', 'is_sold', '_order']
+    readonly_fields = ['_image', '_order']
 
     def _order(self, obj):
         order = Order.objects.filter(items=obj).first()
