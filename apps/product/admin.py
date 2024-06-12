@@ -83,7 +83,7 @@ class CategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 @admin.register(SubCategory)
 class SubCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ['name', 'parent']
-    fields = ['name', 'parent', 'title', 'description']
+    fields = ['name', 'parent', 'title', 'description', 'image']
     search_fields = ['name', 'parent__name']
     list_filter = [CategoryFilter]
     formfield_overrides = {
