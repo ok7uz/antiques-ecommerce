@@ -82,6 +82,8 @@ class Product(models.Model):
     size = models.CharField('Размер', max_length=255, db_index=True)
     video_url = models.URLField('Ссылка на видео о продукте на YouTube', blank=True, null=True)
 
+    commentary = models.TextField('Комментарий', blank=True, null=True)
+
     objects = ProductManager()
     new_products = NewProductsManager()
 
