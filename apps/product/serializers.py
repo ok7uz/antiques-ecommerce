@@ -45,7 +45,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = ['id', 'name', 'title', 'description', 'subcategories']
+        fields = ['id', 'name', 'title', 'image', 'description', 'subcategories']
 
     @swagger_serializer_method(L3CategorySerializer(many=True))
     def get_subcategories(self, obj):
