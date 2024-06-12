@@ -50,7 +50,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
     @swagger_serializer_method(L3CategorySerializer(many=True))
     def get_subcategories(self, obj):
         subcategories = obj.subcategories.all()
-        return L3CategorySerializer(subcategories, many=True).data
+        return L3CategorySerializer(subcategories, many=True, context=self.context).data
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class CategorySerializer(serializers.ModelSerializer):
         subcategories = obj.subcategories.select_related('parent').all().order_by('id')
         if category_id:  # get the sidebar subcategories corresponding to the category
             subcategories = subcategories.filter(products__categories=category_id).distinct()
-        return SubCategorySerializer(subcategories, many=True).data
+        return SubCategorySerializer(subcategories, many=True, context=self.context).data
 
 
 class SidebarSerializer(serializers.Serializer):
@@ -76,7 +76,8 @@ class SidebarSerializer(serializers.Serializer):
     def get_data(self, obj):
         category_id = obj.id
         queryset = Category.objects.filter(is_left=True, products__categories=category_id).distinct().order_by('id')
-        return CategorySerializer(queryset, many=True, context={'category_id': category_id}).data
+        return CategorySerializer(queryset, many=True,
+                                  context={'category_id': category_id, 'request': self.context.get('request')}).data
 
 
 class FilterSerializer(serializers.ModelSerializer):

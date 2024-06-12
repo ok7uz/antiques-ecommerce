@@ -10,7 +10,9 @@ from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
 from apps.product.models import Filter, Product, BaseCategory, Category
-from apps.product.serializers import FilterSerializer, ProductListSerializer, ProductSerializer, SidebarSerializer, CategorySerializer
+from apps.product.serializers import (
+    FilterSerializer, ProductListSerializer, ProductSerializer, SidebarSerializer, CategorySerializer
+)
 from config.utils import get_by_category_id, get_by_filter_id, get_by_sidebar_id, get_by_search
 
 
@@ -86,7 +88,7 @@ class CategoryView(APIView):
     def get(self, request, category_id):
         queryset = Category.objects.filter(is_top=True)
         category = get_object_or_404(queryset, id=category_id)
-        serializer = CategorySerializer(category)
+        serializer = CategorySerializer(category, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -102,7 +104,7 @@ class SidebarView(APIView):
             Q(is_top=True) | Q(parent__is_top=True)
         )
         category = get_object_or_404(queryset, id=category_id)
-        serializer = SidebarSerializer(category)
+        serializer = SidebarSerializer(category, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -115,5 +117,5 @@ class FilterList(APIView):
     )
     def get(self, request):
         filters = Filter.objects.all()
-        serializer = FilterSerializer(filters, many=True)
+        serializer = FilterSerializer(filters, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
