@@ -46,6 +46,11 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     _image.short_description = ''
 
 
+@admin.register(ProductImage)
+class ProductImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    pass
+
+
 @admin.register(SoldProduct)
 class SoldProductAdmin(ProductAdmin):
     list_display = ('name', 'vendor_code', 'commentary')
