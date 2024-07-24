@@ -35,7 +35,7 @@ class ProductListView(APIView):
         queryset = get_by_sidebar_id(self.request, queryset)
         queryset = get_by_search(self.request, queryset)
         queryset = get_by_filter_id(self.request, queryset)
-        return queryset
+        return queryset.order_by('vendor_code')
 
     @swagger_auto_schema(
         manual_parameters=[category_id_param, sidebar_id_param, page_param, search_param, filter_param],
