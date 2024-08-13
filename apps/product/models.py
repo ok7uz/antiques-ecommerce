@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django_ckeditor_5.fields import CKEditor5Field
 
 from apps.product.managers import SubCategoryManager, CategoryManager, NewProductsManager, SoldProductsManager, \
     ProductManager, L3CategoryManager
@@ -69,7 +70,7 @@ class Product(models.Model):
         BaseCategory, verbose_name='Категории', related_name='products',
         db_table='product_product_category'
     )
-    description = models.TextField('Описание')
+    description = CKEditor5Field('Описание', config_name='extends',)
     price = models.PositiveIntegerField('Цена')
 
     is_new = models.BooleanField('Новый?', default=False, db_index=True)
@@ -88,7 +89,7 @@ class Product(models.Model):
     new_products = NewProductsManager()
 
     class Meta:
-        ordering = ['-is_new', 'name']
+        ordering = ['vendor_code', '-is_new', 'name']
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
 
